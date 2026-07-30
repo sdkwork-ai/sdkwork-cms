@@ -11,6 +11,8 @@ path = "src/lib.rs"
 
 [dependencies]
 axum.workspace = true
+tokio.workspace = true
+sdkwork-web-bootstrap.workspace = true
 async-trait.workspace = true
 sqlx.workspace = true
 sdkwork-cms-http-handlers.workspace = true

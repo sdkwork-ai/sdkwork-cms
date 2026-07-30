@@ -1,46 +1,32 @@
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let database_url = std::env::var("SDKWORK_CMS_DATABASE_URL")
-        .or_else(|_| std::env::var("DATABASE_URL"))
-        .unwrap_or_else(|_| "postgres://postgres:postgres@localhost:5432/sdkwork_cms".to_string());
-
-    println!("Attempting to connect to: {}", database_url);
-
-    let config = sdkwork_database_config::DatabaseConfig {
-        engine: sdkwork_database_config::DatabaseEngine::Postgres,
-        url: database_url,
-        max_connections: 1,
-        ..Default::default()
-    };
+    let config = sdkwork_database_config::DatabaseConfig::from_env("CMS")?;
+    let schema = std::env::var("SDKWORK_DATABASE_SCHEMA")?;
 
     match sdkwork_database_sqlx::create_pool_from_config(config).await {
         Ok(pool) => {
-            println!("âœ?Connected to database successfully!");
-            
-            // Check if tables exist
+            println!("Connected to the workspace database successfully.");
+
             let tables: Vec<(String,)> = sqlx::query_as(
-                "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name"
+                "SELECT table_name FROM information_schema.tables \
+                 WHERE table_schema = $1 ORDER BY table_name",
             )
-            .fetch_all(pool.as_postgres().unwrap())
+            .bind(&schema)
+            .fetch_all(pool.as_postgres().expect("PostgreSQL pool"))
             .await?;
-            
-            println!("\nExisting tables:");
+
+            println!("\nExisting tables in schema {schema}:");
             for (table_name,) in &tables {
-                println!("  - {}", table_name);
+                println!("  - {table_name}");
             }
-            
+
             if tables.is_empty() {
                 println!("  (no tables found)");
             }
         }
-        Err(e) => {
-            println!("â?Failed to connect: {}", e);
-            println!("\nPlease ensure:");
-            println!("1. PostgreSQL is running on localhost:5432");
-            println!("2. Database 'sdkwork_cms' exists");
-            println!("3. User 'postgres' with password 'postgres' has access");
-            println!("\nTo create the database, run:");
-            println!("  CREATE DATABASE sdkwork_cms;");
+        Err(error) => {
+            println!("Failed to connect: {error}");
+            println!("Configure the canonical SDKWORK_DATABASE_* PostgreSQL profile.");
         }
     }
 

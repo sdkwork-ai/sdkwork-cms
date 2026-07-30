@@ -198,7 +198,7 @@ Test categories:
 
 **File**: `crates/sdkwork-content-cms-repository-sqlx/tests/repository_integration.rs`
 
-Requires a test PostgreSQL profile. Use `sqlx::test` attribute or a test harness with `TEST_DATABASE_URL`.
+Requires a test PostgreSQL profile. Use `sqlx::test` attribute or a test harness with `SDKWORK_DATABASE_TEST_POSTGRES_URL`.
 
 Test categories:
 1. **CRUD round-trips**: Create → retrieve → update → soft-delete for each aggregate
