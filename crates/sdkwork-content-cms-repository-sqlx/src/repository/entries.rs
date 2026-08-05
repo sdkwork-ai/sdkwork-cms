@@ -175,7 +175,7 @@ impl CmsSqlxRepository {
 
         sql.push_str(&format!(" ORDER BY updated_at DESC, id DESC LIMIT ${}", bind_idx));
 
-        let mut q = sqlx::query_as::<_, crate::db::rows::CmsEntryRow>(&sql)
+        let mut q = sqlx::query_as::<_, crate::db::rows::CmsEntryRow>(sqlx::AssertSqlSafe(sql.as_str()))
             .bind(ctx.tenant_id);
 
         if let Some(site_id) = query.site_id {
