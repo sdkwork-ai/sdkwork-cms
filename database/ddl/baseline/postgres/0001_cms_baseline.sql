@@ -570,25 +570,40 @@ CREATE TABLE IF NOT EXISTS cms_idempotency_key (
     CONSTRAINT ck_cms_idempotency_status CHECK (status IN (0, 1, 2, 3))
 );
 
-ALTER TABLE cms_site
-    ADD CONSTRAINT fk_cms_site_default_channel
-    FOREIGN KEY (default_channel_id) REFERENCES cms_channel(id) ON DELETE SET NULL;
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_cms_site_default_channel') THEN
+        ALTER TABLE cms_site ADD CONSTRAINT fk_cms_site_default_channel FOREIGN KEY (default_channel_id) REFERENCES cms_channel(id) ON DELETE SET NULL;
+    END IF;
+END $$;
 
-ALTER TABLE cms_entry
-    ADD CONSTRAINT fk_cms_entry_current_version
-    FOREIGN KEY (current_version_id) REFERENCES cms_entry_version(id) ON DELETE SET NULL;
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_cms_entry_current_version') THEN
+        ALTER TABLE cms_entry ADD CONSTRAINT fk_cms_entry_current_version FOREIGN KEY (current_version_id) REFERENCES cms_entry_version(id) ON DELETE SET NULL;
+    END IF;
+END $$;
 
-ALTER TABLE cms_entry
-    ADD CONSTRAINT fk_cms_entry_published_version
-    FOREIGN KEY (published_version_id) REFERENCES cms_entry_version(id) ON DELETE SET NULL;
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_cms_entry_published_version') THEN
+        ALTER TABLE cms_entry ADD CONSTRAINT fk_cms_entry_published_version FOREIGN KEY (published_version_id) REFERENCES cms_entry_version(id) ON DELETE SET NULL;
+    END IF;
+END $$;
 
-ALTER TABLE cms_page
-    ADD CONSTRAINT fk_cms_page_published_snapshot
-    FOREIGN KEY (published_snapshot_id) REFERENCES cms_publish_snapshot(id) ON DELETE SET NULL;
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_cms_page_published_snapshot') THEN
+        ALTER TABLE cms_page ADD CONSTRAINT fk_cms_page_published_snapshot FOREIGN KEY (published_snapshot_id) REFERENCES cms_publish_snapshot(id) ON DELETE SET NULL;
+    END IF;
+END $$;
 
-ALTER TABLE cms_feed
-    ADD CONSTRAINT fk_cms_feed_published_snapshot
-    FOREIGN KEY (published_snapshot_id) REFERENCES cms_feed_snapshot(id) ON DELETE SET NULL;
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_cms_feed_published_snapshot') THEN
+        ALTER TABLE cms_feed ADD CONSTRAINT fk_cms_feed_published_snapshot FOREIGN KEY (published_snapshot_id) REFERENCES cms_feed_snapshot(id) ON DELETE SET NULL;
+    END IF;
+END $$;
 
 CREATE INDEX IF NOT EXISTS idx_cms_site_tenant_status ON cms_site (tenant_id, status, updated_at DESC);
 CREATE INDEX IF NOT EXISTS idx_cms_channel_site_status ON cms_channel (tenant_id, site_id, status, sort_order);
