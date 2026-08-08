@@ -17,10 +17,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .router
         .layer(sdkwork_web_bootstrap::application_cors_layer_from_env(
             &["SDKWORK_CMS_ENVIRONMENT"],
-            &[
-                "SDKWORK_CMS_CORS_ALLOWED_ORIGINS",
-                "SDKWORK_CORS_ALLOWED_ORIGINS",
-            ],
+            &["SDKWORK_CORS_ALLOWED_ORIGINS"],
         ))
         .layer(TraceLayer::new_for_http());
     let app = service_router(
