@@ -1,7 +1,6 @@
 use std::sync::Arc;
 
 use sdkwork_api_cms_assembly::assemble_api_router;
-use sdkwork_api_cms_standalone_gateway::CmsPostgresReadinessCheck;
 use sdkwork_web_bootstrap::{service_router, ServiceRouterConfig};
 use tower_http::trace::TraceLayer;
 use tracing_subscriber::EnvFilter;
@@ -22,9 +21,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .layer(TraceLayer::new_for_http());
     let app = service_router(
         router,
-        ServiceRouterConfig::default().with_readiness_check(Arc::new(
-            CmsPostgresReadinessCheck::new(assembly.readiness_pool),
-        )),
+        ServiceRouterConfig::default().with_readiness_check(assembly.readiness_check.clone()),
     );
 
     let bind_address = std::env::var("SDKWORK_CMS_APPLICATION_PUBLIC_INGRESS_BIND")

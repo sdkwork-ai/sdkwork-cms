@@ -8,5 +8,6 @@ license.workspace = true
 axum.workspace = true
 sdkwork-cms-http-handlers.workspace = true
 sdkwork-content-cms-service.workspace = true
+sdkwork-web-core.workspace = true
 serde.workspace = true
 serde_json.workspace = true

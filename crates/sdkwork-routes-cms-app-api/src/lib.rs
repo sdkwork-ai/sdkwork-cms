@@ -3,11 +3,13 @@
 pub mod dto;
 pub mod error;
 pub mod handlers;
+pub mod http_route_manifest;
 pub mod manifest;
 pub mod mapper;
 pub mod paths;
 pub mod routes;
 
+pub use http_route_manifest::gateway_route_manifest;
 pub use manifest::cms_app_api_manifest;
 pub use routes::build_sdkwork_cms_app_api_router;
 

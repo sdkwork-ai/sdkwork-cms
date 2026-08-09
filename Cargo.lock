@@ -1733,9 +1733,11 @@ version = "0.1.0"
 dependencies = [
  "async-trait",
  "axum",
+ "sdkwork-cms-database-host",
  "sdkwork-cms-http-handlers",
  "sdkwork-content-cms-repository-sqlx",
  "sdkwork-content-cms-service",
+ "sdkwork-database-sqlx",
  "sdkwork-iam-web-adapter",
  "sdkwork-routes-cms-app-api",
  "sdkwork-routes-cms-backend-api",
@@ -1982,6 +1984,7 @@ dependencies = [
  "axum",
  "sdkwork-cms-http-handlers",
  "sdkwork-content-cms-service",
+ "sdkwork-web-core",
  "serde",
  "serde_json",
 ]
@@ -1993,6 +1996,7 @@ dependencies = [
  "axum",
  "sdkwork-cms-http-handlers",
  "sdkwork-content-cms-service",
+ "sdkwork-web-core",
  "serde",
  "serde_json",
 ]
