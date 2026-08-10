@@ -1,6 +1,7 @@
 pub mod cms_repository;
 pub mod content_modeling;
 pub mod entries;
+pub mod favorites;
 pub mod feeds;
 pub mod governance;
 pub mod pages;

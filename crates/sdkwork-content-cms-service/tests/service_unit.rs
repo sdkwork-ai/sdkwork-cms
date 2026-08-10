@@ -426,6 +426,27 @@ impl CmsRepository for MockRepository {
         Ok(CmsPublishSnapshot { id: 1, owner_type: "feed".to_string(), owner_id: _command.owner_id, snapshot_payload_json: "{}".to_string(), status: 1, published_at: "2026-01-01T00:00:00Z".to_string() })
     }
 
+    async fn create_favorite(&self, _ctx: &CmsRequestContext, _command: FavoriteCommand) -> CmsResult<CmsFavorite> {
+        if self.should_fail { return Err(CmsError::internal("db error")); }
+        Ok(CmsFavorite {
+            id: 1, uuid: "fav-1".to_string(), tenant_id: _ctx.tenant_id, organization_id: _ctx.organization_id,
+            user_id: _ctx.user_id, favorite_type: _command.favorite_type, target_type: _command.target_type,
+            target_id: _command.target_id, target_uuid: _command.target_uuid, target_url: _command.target_url,
+            title: _command.title, summary: _command.summary, source_display_name: _command.source_display_name,
+            media_json: _command.media_json, favorited_at: "2026-01-01T00:00:00Z".to_string(), version: 0,
+        })
+    }
+
+    async fn list_favorites(&self, _ctx: &CmsRequestContext, _query: ListFavoritesQuery) -> CmsResult<CmsFavoritePage> {
+        if self.should_fail { return Err(CmsError::internal("db error")); }
+        Ok(CmsPage { items: vec![], next_cursor: None })
+    }
+
+    async fn delete_favorite(&self, _ctx: &CmsRequestContext, _favorite_uuid: String) -> CmsResult<CommandResult> {
+        if self.should_fail { return Err(CmsError::internal("db error")); }
+        Ok(CommandResult { ok: true, resource_id: None, request_id: Some("test".to_string()) })
+    }
+
     async fn list_audit_logs(&self, _ctx: &CmsRequestContext, _query: ListAuditLogsQuery) -> CmsResult<CmsAuditLogPage> {
         if self.should_fail { return Err(CmsError::internal("db error")); }
         Ok(CmsPage { items: vec![], next_cursor: None })
@@ -828,4 +849,79 @@ async fn not_found_error_propagated() {
         CmsError::NotFound(_) => {},
         other => panic!("Expected NotFound, got: {:?}", other),
     }
+}
+
+// ===== Favorites Tests =====
+
+fn favorite_command() -> FavoriteCommand {
+    FavoriteCommand {
+        favorite_type: "chat".to_string(),
+        target_type: "im_message".to_string(),
+        target_id: 42,
+        target_uuid: None,
+        target_url: None,
+        title: "Hello".to_string(),
+        summary: "preview".to_string(),
+        source_display_name: "张三".to_string(),
+        media_json: "{}".to_string(),
+    }
+}
+
+#[tokio::test]
+async fn create_favorite_requires_authenticated_user() {
+    let service = create_service(false, false);
+    let mut ctx = test_context(vec![]);
+    ctx.user_id = 0;
+    let result = service.create_favorite(&ctx, favorite_command()).await;
+    assert!(matches!(result, Err(CmsError::PermissionDenied(_))));
+}
+
+#[tokio::test]
+async fn create_favorite_rejects_unknown_favorite_type() {
+    let service = create_service(false, false);
+    let ctx = test_context(vec![]);
+    let mut command = favorite_command();
+    command.favorite_type = "video".to_string();
+    let result = service.create_favorite(&ctx, command).await;
+    assert!(matches!(result, Err(CmsError::Validation(_))));
+}
+
+#[tokio::test]
+async fn create_favorite_rejects_missing_target_id() {
+    let service = create_service(false, false);
+    let ctx = test_context(vec![]);
+    let mut command = favorite_command();
+    command.target_id = 0;
+    let result = service.create_favorite(&ctx, command).await;
+    assert!(matches!(result, Err(CmsError::Validation(_))));
+}
+
+#[tokio::test]
+async fn create_favorite_succeeds_for_authenticated_user() {
+    let service = create_service(false, false);
+    let ctx = test_context(vec![]);
+    let result = service.create_favorite(&ctx, favorite_command()).await;
+    assert!(result.is_ok());
+    let favorite = result.unwrap();
+    assert_eq!(favorite.target_type, "im_message");
+    assert_eq!(favorite.user_id, ctx.user_id);
+}
+
+#[tokio::test]
+async fn list_favorites_requires_authenticated_user() {
+    let service = create_service(false, false);
+    let mut ctx = test_context(vec![]);
+    ctx.user_id = 0;
+    let result = service
+        .list_favorites(&ctx, ListFavoritesQuery { favorite_type: None, search_query: None, cursor: None, limit: 20 })
+        .await;
+    assert!(matches!(result, Err(CmsError::PermissionDenied(_))));
+}
+
+#[tokio::test]
+async fn delete_favorite_requires_uuid() {
+    let service = create_service(false, false);
+    let ctx = test_context(vec![]);
+    let result = service.delete_favorite(&ctx, "".to_string()).await;
+    assert!(matches!(result, Err(CmsError::Validation(_))));
 }

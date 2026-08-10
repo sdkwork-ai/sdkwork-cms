@@ -4,7 +4,7 @@
   "owner": "sdkwork-cms",
   "domain": "content",
   "capability": "cms",
-  "operationCount": 76,
+  "operationCount": 79,
   "operations": [
     {
       "operationId": "cms.entries.list",
@@ -144,6 +144,48 @@
       "public": true,
       "sdkFamily": "sdkwork-cms-app-sdk",
       "serviceMethod": "delivery_list_feed_items",
+      "implemented": true
+    },
+    {
+      "operationId": "cms.favorites.create",
+      "surface": "app-api",
+      "method": "POST",
+      "path": "/app/v3/api/cms/favorites",
+      "prefix": "/app/v3/api/cms",
+      "authMode": "dual-token",
+      "permission": null,
+      "resource": "cms.favorites",
+      "public": false,
+      "sdkFamily": "sdkwork-cms-app-sdk",
+      "serviceMethod": "create_favorite",
+      "implemented": true
+    },
+    {
+      "operationId": "cms.favorites.list",
+      "surface": "app-api",
+      "method": "GET",
+      "path": "/app/v3/api/cms/favorites",
+      "prefix": "/app/v3/api/cms",
+      "authMode": "dual-token",
+      "permission": null,
+      "resource": "cms.favorites",
+      "public": false,
+      "sdkFamily": "sdkwork-cms-app-sdk",
+      "serviceMethod": "list_favorites",
+      "implemented": true
+    },
+    {
+      "operationId": "cms.favorites.delete",
+      "surface": "app-api",
+      "method": "DELETE",
+      "path": "/app/v3/api/cms/favorites/{favoriteId}",
+      "prefix": "/app/v3/api/cms",
+      "authMode": "dual-token",
+      "permission": null,
+      "resource": "cms.favorites",
+      "public": false,
+      "sdkFamily": "sdkwork-cms-app-sdk",
+      "serviceMethod": "delete_favorite",
       "implemented": true
     },
     {

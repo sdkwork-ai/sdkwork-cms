@@ -66,6 +66,9 @@ tables:
   - name: cms_feed_snapshot
     lifecycle_status: active
     owner: cms-platform
+  - name: cms_favorite
+    lifecycle_status: active
+    owner: cms-platform
   - name: cms_audit_log
     lifecycle_status: active
     owner: cms-platform

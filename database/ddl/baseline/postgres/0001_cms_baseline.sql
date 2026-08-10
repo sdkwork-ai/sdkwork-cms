@@ -501,6 +501,39 @@ CREATE TABLE IF NOT EXISTS cms_feed_snapshot (
     CONSTRAINT ck_cms_feed_snapshot_status CHECK (status IN (0, 1, 2, 9))
 );
 
+CREATE TABLE IF NOT EXISTS cms_favorite (
+    id BIGINT PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL UNIQUE,
+    tenant_id BIGINT NOT NULL,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    user_id BIGINT NOT NULL,
+    favorite_type VARCHAR(32) NOT NULL
+        CHECK (favorite_type IN
+          ('link','article','image','file','voice','chat')),
+    target_type VARCHAR(64) NOT NULL
+        CHECK (btrim(target_type) <> ''),
+    target_id BIGINT NOT NULL DEFAULT 0,
+    target_uuid VARCHAR(64),
+    target_url VARCHAR(2048),
+    title VARCHAR(512) NOT NULL DEFAULT '',
+    summary VARCHAR(2048) NOT NULL DEFAULT '',
+    source_display_name VARCHAR(256) NOT NULL DEFAULT '',
+    media_json JSONB NOT NULL DEFAULT '{}'::jsonb,
+    favorited_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    version BIGINT NOT NULL DEFAULT 0,
+    deleted_at TIMESTAMPTZ,
+    deleted_by BIGINT NOT NULL DEFAULT 0,
+    CONSTRAINT uk_cms_favorite_user_target UNIQUE
+        (tenant_id, organization_id, user_id, target_type, target_id),
+    CONSTRAINT chk_cms_favorite_user CHECK (user_id > 0),
+    CONSTRAINT chk_cms_favorite_target CHECK (
+        (target_type <> 'external_url' AND target_id > 0)
+        OR (target_type = 'external_url' AND btrim(COALESCE(target_url, '')) <> '')
+    )
+);
+
 CREATE TABLE IF NOT EXISTS cms_audit_log (
     id BIGINT PRIMARY KEY,
     uuid VARCHAR(64) NOT NULL UNIQUE,
@@ -641,6 +674,11 @@ CREATE INDEX IF NOT EXISTS idx_cms_feed_item_feed_order ON cms_feed_item (tenant
 CREATE INDEX IF NOT EXISTS idx_cms_feed_item_entry ON cms_feed_item (tenant_id, entry_id);
 CREATE INDEX IF NOT EXISTS idx_cms_feed_snapshot_feed ON cms_feed_snapshot (tenant_id, feed_id, status, published_at DESC);
 
+CREATE INDEX IF NOT EXISTS idx_cms_favorite_user_ts ON cms_favorite
+    (tenant_id, organization_id, user_id, favorited_at DESC);
+CREATE INDEX IF NOT EXISTS idx_cms_favorite_user_type ON cms_favorite
+    (tenant_id, organization_id, user_id, favorite_type, favorited_at DESC);
+
 CREATE INDEX IF NOT EXISTS idx_cms_audit_log_resource ON cms_audit_log (tenant_id, site_id, resource_type, resource_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_cms_audit_log_actor ON cms_audit_log (tenant_id, actor_user_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_cms_outbox_event_pending ON cms_outbox_event (status, next_attempt_at, created_at);
@@ -666,6 +704,7 @@ COMMENT ON TABLE cms_feed IS 'CMS feed definition for curated, rule, hybrid, sea
 COMMENT ON TABLE cms_feed_rule IS 'CMS feed automatic rule definition.';
 COMMENT ON TABLE cms_feed_item IS 'CMS feed manual curated item.';
 COMMENT ON TABLE cms_feed_snapshot IS 'CMS feed published item snapshot for stable delivery.';
+COMMENT ON TABLE cms_favorite IS 'CMS user favorite. User-owned polymorphic reference to content objects across business modules with a self-sufficient snapshot.';
 COMMENT ON TABLE cms_audit_log IS 'CMS business audit log.';
 COMMENT ON TABLE cms_outbox_event IS 'CMS durable outbox event table.';
 COMMENT ON TABLE cms_idempotency_key IS 'CMS idempotent command record.';

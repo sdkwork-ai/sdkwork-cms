@@ -302,6 +302,27 @@ pub struct FeedItemsCommand {
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
+pub struct FavoriteCommand {
+    pub favorite_type: String,
+    pub target_type: String,
+    pub target_id: CmsId,
+    pub target_uuid: Option<String>,
+    pub target_url: Option<String>,
+    pub title: String,
+    pub summary: String,
+    pub source_display_name: String,
+    pub media_json: CmsJson,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct ListFavoritesQuery {
+    pub favorite_type: Option<String>,
+    pub search_query: Option<String>,
+    pub cursor: Option<String>,
+    pub limit: u32,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct RetryOutboxEventCommand {
     pub event_id: CmsId,
     pub reason: Option<String>,

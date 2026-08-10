@@ -74,6 +74,9 @@ impl CmsRepository for MockRepository {
     async fn delete_feed_item(&self, _ctx: &CmsRequestContext, _item_id: CmsId) -> CmsResult<CommandResult> { unimplemented!() }
     async fn retrieve_feed_snapshot(&self, _ctx: &CmsRequestContext, _snapshot_id: CmsId) -> CmsResult<CmsFeedSnapshot> { unimplemented!() }
     async fn publish_feed(&self, _ctx: &CmsRequestContext, _command: PublishCommand) -> CmsResult<CmsPublishSnapshot> { unimplemented!() }
+    async fn create_favorite(&self, _ctx: &CmsRequestContext, _command: FavoriteCommand) -> CmsResult<CmsFavorite> { unimplemented!() }
+    async fn list_favorites(&self, _ctx: &CmsRequestContext, _query: ListFavoritesQuery) -> CmsResult<CmsFavoritePage> { unimplemented!() }
+    async fn delete_favorite(&self, _ctx: &CmsRequestContext, _favorite_uuid: String) -> CmsResult<CommandResult> { unimplemented!() }
     async fn list_audit_logs(&self, _ctx: &CmsRequestContext, _query: ListAuditLogsQuery) -> CmsResult<CmsAuditLogPage> { unimplemented!() }
     async fn list_outbox_events(&self, _ctx: &CmsRequestContext, _query: ListOutboxEventsQuery) -> CmsResult<CmsOutboxEventPage> { unimplemented!() }
     async fn retry_outbox_event(&self, _ctx: &CmsRequestContext, _command: RetryOutboxEventCommand) -> CmsResult<CommandResult> { unimplemented!() }

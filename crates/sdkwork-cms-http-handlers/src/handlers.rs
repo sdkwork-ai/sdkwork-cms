@@ -271,6 +271,27 @@ pub struct DeliveryFeedItemsParams {
     pub page_size: Option<u32>,
 }
 
+#[derive(Deserialize)]
+pub struct CreateFavoriteRequest {
+    pub target_type: String,
+    pub target_id: Option<i64>,
+    pub target_uuid: Option<String>,
+    pub target_url: Option<String>,
+    pub favorite_type: String,
+    pub title: String,
+    pub summary: String,
+    pub source_display_name: String,
+    pub media: Option<serde_json::Value>,
+}
+
+#[derive(Deserialize)]
+pub struct FavoriteListParams {
+    pub favorite_type: Option<String>,
+    pub q: Option<String>,
+    pub cursor: Option<String>,
+    pub page_size: Option<u32>,
+}
+
 // ============ Backend API Handlers ============
 
 pub async fn list_sites(
@@ -1935,5 +1956,100 @@ pub async fn open_list_feed_items(
             serde_json::json!({"ok": true, "data": {"items": page.items.iter().map(|i| serde_json::json!({"id": i.id.to_string(), "feedId": i.feed_id.to_string(), "itemKind": i.item_kind})).collect::<Vec<_>>()}}),
         ),
         Err(e) => Json(serde_json::json!({"ok": false, "error": {"detail": e.to_string()}})),
+    }
+}
+
+// ============ Favorites Handlers (App API) ============
+
+fn favorite_json(favorite: &sdkwork_content_cms_service::domain::CmsFavorite) -> serde_json::Value {
+    serde_json::json!({
+        "id": favorite.id.to_string(),
+        "favoriteId": favorite.uuid,
+        "favoriteType": favorite.favorite_type,
+        "targetType": favorite.target_type,
+        "targetId": favorite.target_id.to_string(),
+        "targetUuid": favorite.target_uuid,
+        "targetUrl": favorite.target_url,
+        "title": favorite.title,
+        "summary": favorite.summary,
+        "sourceDisplayName": favorite.source_display_name,
+        "media": serde_json::from_str::<serde_json::Value>(&favorite.media_json)
+            .unwrap_or_else(|_| serde_json::json!({})),
+        "favoritedAt": favorite.favorited_at,
+    })
+}
+
+pub async fn create_favorite(
+    State(state): State<AppState>,
+    CmsHttpRequestContext(ctx): CmsHttpRequestContext,
+    Json(req): Json<CreateFavoriteRequest>,
+) -> (StatusCode, Json<serde_json::Value>) {
+    let command = FavoriteCommand {
+        favorite_type: req.favorite_type,
+        target_type: req.target_type,
+        target_id: req.target_id.unwrap_or(0),
+        target_uuid: req.target_uuid,
+        target_url: req.target_url,
+        title: req.title,
+        summary: req.summary,
+        source_display_name: req.source_display_name,
+        media_json: req
+            .media
+            .map(|value| value.to_string())
+            .unwrap_or_else(|| "{}".to_string()),
+    };
+    match state.service.create_favorite(&ctx, command).await {
+        Ok(favorite) => (
+            StatusCode::OK,
+            Json(serde_json::json!({"ok": true, "data": {"item": favorite_json(&favorite)}})),
+        ),
+        Err(e) => (
+            StatusCode::BAD_REQUEST,
+            Json(serde_json::json!({"ok": false, "error": {"detail": e.to_string()}})),
+        ),
+    }
+}
+
+pub async fn list_favorites(
+    State(state): State<AppState>,
+    CmsHttpRequestContext(ctx): CmsHttpRequestContext,
+    Query(params): Query<FavoriteListParams>,
+) -> Json<serde_json::Value> {
+    let query = ListFavoritesQuery {
+        favorite_type: params.favorite_type,
+        search_query: params.q,
+        cursor: params.cursor,
+        limit: params.page_size.unwrap_or(20).min(100),
+    };
+    match state.service.list_favorites(&ctx, query).await {
+        Ok(page) => Json(serde_json::json!({
+            "ok": true,
+            "data": {
+                "items": page.items.iter().map(favorite_json).collect::<Vec<_>>(),
+                "pageInfo": {
+                    "mode": "cursor",
+                    "nextCursor": page.next_cursor,
+                    "hasMore": page.next_cursor.is_some(),
+                },
+            }
+        })),
+        Err(e) => Json(serde_json::json!({"ok": false, "error": {"detail": e.to_string()}})),
+    }
+}
+
+pub async fn delete_favorite(
+    State(state): State<AppState>,
+    CmsHttpRequestContext(ctx): CmsHttpRequestContext,
+    Path(favorite_id): Path<String>,
+) -> (StatusCode, Json<serde_json::Value>) {
+    match state.service.delete_favorite(&ctx, favorite_id).await {
+        Ok(_) => (
+            StatusCode::OK,
+            Json(serde_json::json!({"ok": true, "data": {"deleted": true}})),
+        ),
+        Err(e) => (
+            StatusCode::NOT_FOUND,
+            Json(serde_json::json!({"ok": false, "error": {"detail": e.to_string()}})),
+        ),
     }
 }

@@ -117,6 +117,12 @@
       "lifecycle_status": "active"
     },
     {
+      "table_name": "cms_favorite",
+      "owner": "cms-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
       "table_name": "cms_audit_log",
       "owner": "cms-platform",
       "compliance_level": "L2",

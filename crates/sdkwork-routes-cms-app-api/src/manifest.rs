@@ -72,6 +72,27 @@ pub fn cms_app_api_manifest() -> RouteManifest {
                 permission: None,
                 auth_mode: "anonymous",
             },
+            RouteDefinition {
+                method: "POST",
+                path: paths::FAVORITES,
+                operation_id: "cms.favorites.create",
+                permission: None,
+                auth_mode: "dual-token",
+            },
+            RouteDefinition {
+                method: "GET",
+                path: paths::FAVORITES,
+                operation_id: "cms.favorites.list",
+                permission: None,
+                auth_mode: "dual-token",
+            },
+            RouteDefinition {
+                method: "DELETE",
+                path: paths::FAVORITE_BY_ID,
+                operation_id: "cms.favorites.delete",
+                permission: None,
+                auth_mode: "dual-token",
+            },
         ],
     }
 }

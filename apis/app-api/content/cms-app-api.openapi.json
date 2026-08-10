@@ -293,6 +293,146 @@
         "x-sdkwork-auth-mode": "anonymous",
         "x-sdkwork-public": true
       }
+    },
+    "/app/v3/api/cms/favorites": {
+      "post": {
+        "tags": [
+          "cms"
+        ],
+        "summary": "Create or refresh a user favorite for a content object",
+        "operationId": "cms.favorites.create",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCmsFavoriteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CmsFavoriteCreatedOk"
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "AuthToken": [],
+            "AccessToken": []
+          }
+        ],
+        "x-sdkwork-owner": "sdkwork-cms",
+        "x-sdkwork-api-authority": "sdkwork-cms.app",
+        "x-sdkwork-domain": "content",
+        "x-sdkwork-resource": "cms.favorites",
+        "x-sdkwork-auth-mode": "dual-token"
+      },
+      "get": {
+        "tags": [
+          "cms"
+        ],
+        "summary": "List the current user favorites with type filter, cursor pagination, and search",
+        "operationId": "cms.favorites.list",
+        "parameters": [
+          {
+            "name": "favoriteType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/CmsFavoriteType"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 256
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Cursor"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CmsFavoritePageOk"
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "AuthToken": [],
+            "AccessToken": []
+          }
+        ],
+        "x-sdkwork-owner": "sdkwork-cms",
+        "x-sdkwork-api-authority": "sdkwork-cms.app",
+        "x-sdkwork-domain": "content",
+        "x-sdkwork-resource": "cms.favorites",
+        "x-sdkwork-auth-mode": "dual-token"
+      }
+    },
+    "/app/v3/api/cms/favorites/{favoriteId}": {
+      "delete": {
+        "tags": [
+          "cms"
+        ],
+        "summary": "Delete a user favorite",
+        "operationId": "cms.favorites.delete",
+        "parameters": [
+          {
+            "name": "favoriteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 64
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CmsFavoriteDeletedOk"
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "AuthToken": [],
+            "AccessToken": []
+          }
+        ],
+        "x-sdkwork-owner": "sdkwork-cms",
+        "x-sdkwork-api-authority": "sdkwork-cms.app",
+        "x-sdkwork-domain": "content",
+        "x-sdkwork-resource": "cms.favorites",
+        "x-sdkwork-auth-mode": "dual-token"
+      }
     }
   },
   "components": {
@@ -495,6 +635,151 @@
                               "type": "boolean"
                             }
                           }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetail"
+            }
+          }
+        }
+      },
+      "CmsFavoriteCreatedOk": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SdkWorkApiResponse"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "item"
+                      ],
+                      "properties": {
+                        "item": {
+                          "$ref": "#/components/schemas/CmsFavoriteView"
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetail"
+            }
+          }
+        }
+      },
+      "CmsFavoritePageOk": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SdkWorkApiResponse"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "items",
+                        "pageInfo"
+                      ],
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/CmsFavoriteView"
+                          }
+                        },
+                        "pageInfo": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "mode",
+                            "hasMore"
+                          ],
+                          "properties": {
+                            "mode": {
+                              "type": "string",
+                              "enum": [
+                                "cursor"
+                              ]
+                            },
+                            "nextCursor": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "hasMore": {
+                              "type": "boolean"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetail"
+            }
+          }
+        }
+      },
+      "CmsFavoriteDeletedOk": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SdkWorkApiResponse"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "deleted"
+                      ],
+                      "properties": {
+                        "deleted": {
+                          "type": "boolean"
                         }
                       }
                     }
@@ -825,6 +1110,128 @@
             "type": "string",
             "format": "int64",
             "x-sdkwork-int64-string": true
+          }
+        }
+      },
+      "CmsFavoriteType": {
+        "type": "string",
+        "enum": [
+          "link",
+          "article",
+          "image",
+          "file",
+          "voice",
+          "chat"
+        ],
+        "description": "Content shape of the favorite driving the favorites page filter tabs."
+      },
+      "CmsFavoriteView": {
+        "type": "object",
+        "required": [
+          "id",
+          "favoriteId",
+          "favoriteType",
+          "targetType",
+          "targetId",
+          "title",
+          "summary",
+          "sourceDisplayName",
+          "favoritedAt"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "int64",
+            "x-sdkwork-int64-string": true
+          },
+          "favoriteId": {
+            "type": "string",
+            "description": "Stable external identifier of the favorite used in delete and cursor operations."
+          },
+          "favoriteType": {
+            "$ref": "#/components/schemas/CmsFavoriteType"
+          },
+          "targetType": {
+            "type": "string",
+            "description": "Owning business module of the favorited object, e.g. im_message, drive_file, kb_article, cms_entry, external_url."
+          },
+          "targetId": {
+            "type": "string",
+            "format": "int64",
+            "x-sdkwork-int64-string": true
+          },
+          "targetUuid": {
+            "type": "string"
+          },
+          "targetUrl": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "sourceDisplayName": {
+            "type": "string"
+          },
+          "media": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "favoritedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateCmsFavoriteRequest": {
+        "type": "object",
+        "required": [
+          "targetType",
+          "favoriteType",
+          "title",
+          "summary",
+          "sourceDisplayName"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "targetType": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "targetId": {
+            "type": "string",
+            "format": "int64",
+            "x-sdkwork-int64-string": true
+          },
+          "targetUuid": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "targetUrl": {
+            "type": "string",
+            "maxLength": 2048
+          },
+          "favoriteType": {
+            "$ref": "#/components/schemas/CmsFavoriteType"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 512
+          },
+          "summary": {
+            "type": "string",
+            "maxLength": 2048
+          },
+          "sourceDisplayName": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "media": {
+            "type": "object",
+            "additionalProperties": true
           }
         }
       },

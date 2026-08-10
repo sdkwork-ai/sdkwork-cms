@@ -211,6 +211,14 @@
       "implementationStatus": "Fetch engagement summaries through dependency SDKs without copying engagement tables. - Implemented."
     },
     {
+      "trait": "CmsUserFavoritePort",
+      "kind": "owned-capability",
+      "ownerWorkspace": "sdkwork-cms",
+      "purpose": "User favorites over content objects across business modules (im_message, drive_file, kb_article, cms_entry, external_url). The cms_favorite table is CMS-owned; target details are snapshotted at favorite time and never fetched from the target domain.",
+      "triggeredBy": ["cms.favorites.create", "cms.favorites.list", "cms.favorites.delete"],
+      "implementationStatus": "Implemented. Dual-token app-api operations scoped by authenticated user id with keyset cursor pagination and soft delete."
+    },
+    {
       "trait": "CmsSitemapProjectionPort",
       "kind": "event-consumer",
       "ownerWorkspace": "projection-runtime",

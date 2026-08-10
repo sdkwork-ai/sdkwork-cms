@@ -468,6 +468,30 @@ impl CmsRepository for CmsSqlxRepository {
         CmsSqlxRepository::publish_feed(self, ctx, command).await
     }
 
+    async fn create_favorite(
+        &self,
+        ctx: &CmsRequestContext,
+        command: FavoriteCommand,
+    ) -> CmsResult<CmsFavorite> {
+        CmsSqlxRepository::create_favorite(self, ctx, command).await
+    }
+
+    async fn list_favorites(
+        &self,
+        ctx: &CmsRequestContext,
+        query: ListFavoritesQuery,
+    ) -> CmsResult<CmsFavoritePage> {
+        CmsSqlxRepository::list_favorites(self, ctx, query).await
+    }
+
+    async fn delete_favorite(
+        &self,
+        ctx: &CmsRequestContext,
+        favorite_uuid: String,
+    ) -> CmsResult<CommandResult> {
+        CmsSqlxRepository::delete_favorite(self, ctx, favorite_uuid).await
+    }
+
     async fn list_audit_logs(
         &self,
         ctx: &CmsRequestContext,

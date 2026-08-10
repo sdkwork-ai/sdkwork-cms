@@ -282,6 +282,22 @@ pub trait CmsRepository: Send + Sync {
         command: PublishCommand,
     ) -> CmsResult<CmsPublishSnapshot>;
 
+    async fn create_favorite(
+        &self,
+        ctx: &CmsRequestContext,
+        command: FavoriteCommand,
+    ) -> CmsResult<CmsFavorite>;
+    async fn list_favorites(
+        &self,
+        ctx: &CmsRequestContext,
+        query: ListFavoritesQuery,
+    ) -> CmsResult<CmsFavoritePage>;
+    async fn delete_favorite(
+        &self,
+        ctx: &CmsRequestContext,
+        favorite_uuid: String,
+    ) -> CmsResult<CommandResult>;
+
     async fn list_audit_logs(
         &self,
         ctx: &CmsRequestContext,

@@ -220,6 +220,26 @@ pub struct CmsFeedSnapshot {
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
+pub struct CmsFavorite {
+    pub id: CmsId,
+    pub uuid: String,
+    pub tenant_id: CmsId,
+    pub organization_id: CmsId,
+    pub user_id: CmsId,
+    pub favorite_type: String,
+    pub target_type: String,
+    pub target_id: CmsId,
+    pub target_uuid: Option<String>,
+    pub target_url: Option<String>,
+    pub title: String,
+    pub summary: String,
+    pub source_display_name: String,
+    pub media_json: CmsJson,
+    pub favorited_at: CmsInstant,
+    pub version: i64,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct CmsAuditLog {
     pub id: CmsId,
     pub site_id: Option<CmsId>,

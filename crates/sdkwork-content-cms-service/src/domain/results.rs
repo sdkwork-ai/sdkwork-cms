@@ -27,5 +27,6 @@ pub type CmsPagePage = CmsPage<CmsPageModel>;
 pub type CmsFeedPage = CmsPage<CmsFeed>;
 pub type CmsFeedRulePage = CmsPage<CmsFeedRule>;
 pub type CmsFeedItemPage = CmsPage<CmsFeedItem>;
+pub type CmsFavoritePage = CmsPage<CmsFavorite>;
 pub type CmsAuditLogPage = CmsPage<CmsAuditLog>;
 pub type CmsOutboxEventPage = CmsPage<CmsOutboxEvent>;
