@@ -12,7 +12,7 @@ path = "src/main.rs"
 path = "src/lib.rs"
 
 [dependencies]
-sdkwork_api_cms_assembly = { package = "sdkwork-api-cms-assembly", path = "../sdkwork-api-cms-assembly" }
+sdkwork_api_cms_assembly.workspace = true
 axum.workspace = true
 tokio.workspace = true
 sqlx.workspace = true
