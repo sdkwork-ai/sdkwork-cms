@@ -1738,11 +1738,9 @@ dependencies = [
  "sdkwork-content-cms-repository-sqlx",
  "sdkwork-content-cms-service",
  "sdkwork-database-sqlx",
- "sdkwork-iam-web-adapter",
  "sdkwork-routes-cms-app-api",
  "sdkwork-routes-cms-backend-api",
  "sdkwork-routes-cms-open-api",
- "sdkwork-web-axum",
  "sdkwork-web-bootstrap",
  "sdkwork-web-core",
  "sqlx",
@@ -1755,10 +1753,10 @@ version = "0.1.0"
 dependencies = [
  "axum",
  "sdkwork-api-cms-assembly",
+ "sdkwork-iam-web-adapter",
  "sdkwork-web-bootstrap",
  "sqlx",
  "tokio",
- "tower-http 0.6.11",
  "tracing",
  "tracing-subscriber",
 ]
@@ -2761,7 +2759,6 @@ dependencies = [
  "tower",
  "tower-layer",
  "tower-service",
- "tracing",
  "url",
 ]
 

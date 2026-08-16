@@ -21,10 +21,15 @@ use sdkwork_database_sqlx::DatabasePool;
 use sdkwork_web_bootstrap::{
     ApiAssemblyContribution, DatabasePoolReadinessCheck, PgPoolReadinessCheck, ReadinessCheck,
 };
-use sdkwork_web_core::{HttpRouteManifest, WebEnvironment, WebRequestContextProfile};
+use sdkwork_web_core::HttpRouteManifest;
 
 /// Indivisible host-neutral API assembly contribution (web-bootstrap contract).
 pub type ApiAssembly = ApiAssemblyContribution;
+
+pub struct ApiAssemblyRuntime {
+    pub contribution: ApiAssembly,
+    pub database_pool: DatabasePool,
+}
 
 fn combined_route_manifest() -> HttpRouteManifest {
     let manifests = [
@@ -56,48 +61,39 @@ fn contribution_from(
 
 fn cms_state(repository: Arc<dyn CmsRepository + Send + Sync>) -> AppState {
     let authorizer: Arc<dyn CmsIamAuthorizer + Send + Sync> = Arc::new(ContextAuthorizer);
-    let event_publisher: Arc<dyn CmsEventPublisher + Send + Sync> = Arc::new(
-        RepositoryEventPublisher {
+    let event_publisher: Arc<dyn CmsEventPublisher + Send + Sync> =
+        Arc::new(RepositoryEventPublisher {
             repository: Arc::clone(&repository),
-        },
-    );
+        });
     AppState::new(CmsService::new(repository, authorizer, event_publisher))
 }
 
 pub async fn assemble_api_router() -> Result<ApiAssembly, String> {
+    Ok(assemble_api_router_runtime().await?.contribution)
+}
+
+pub async fn assemble_api_router_runtime() -> Result<ApiAssemblyRuntime, String> {
     let database_host = connect_and_bootstrap_cms_database_from_env()
         .await
         .map_err(|error| format!("CMS database bootstrap failed: {error}"))?;
-    let readiness_pool = database_host
-        .pool()
+    let pool = database_host.pool().clone();
+    let readiness_pool = pool
         .as_postgres()
         .ok_or_else(|| "CMS requires a PostgreSQL database profile".to_owned())?
         .clone();
 
     let state = cms_state(Arc::new(CmsSqlxRepository::new(readiness_pool.clone())));
 
-    let business_router = Router::new()
+    let router = Router::new()
         .merge(sdkwork_routes_cms_app_api::gateway_mount(state.clone()))
         .merge(sdkwork_routes_cms_backend_api::gateway_mount(state.clone()))
         .merge(sdkwork_routes_cms_open_api::gateway_mount(state));
-    let resolver = sdkwork_iam_web_adapter::iam_web_request_context_resolver_from_env().await;
-    let profile = WebRequestContextProfile {
-        open_api_prefixes: vec!["/cms/v3/api".to_owned()],
-        public_path_prefixes: vec![
-            "/healthz".to_owned(),
-            "/readyz".to_owned(),
-            "/metrics".to_owned(),
-            "/app/v3/api/cms".to_owned(),
-        ],
-        environment: web_environment(),
-        ..WebRequestContextProfile::default()
-    };
-    let router = sdkwork_web_axum::with_web_request_context(
-        business_router,
-        sdkwork_web_axum::WebFrameworkLayer::new(resolver).with_profile(profile),
-    );
-
-    contribution_from(router, Arc::new(PgPoolReadinessCheck::new(readiness_pool)))
+    let contribution =
+        contribution_from(router, Arc::new(PgPoolReadinessCheck::new(readiness_pool)))?;
+    Ok(ApiAssemblyRuntime {
+        contribution,
+        database_pool: pool,
+    })
 }
 
 /// Assemble the CMS contribution against a caller-provided database pool so the
@@ -123,19 +119,6 @@ pub async fn assemble_api_router_with_pool(pool: DatabasePool) -> Result<ApiAsse
         business_router,
         Arc::new(DatabasePoolReadinessCheck::new(pool)),
     )
-}
-
-fn web_environment() -> WebEnvironment {
-    match std::env::var("SDKWORK_CMS_ENVIRONMENT")
-        .unwrap_or_else(|_| "development".to_owned())
-        .trim()
-        .to_ascii_lowercase()
-        .as_str()
-    {
-        "production" | "prod" => WebEnvironment::Prod,
-        "test" | "testing" => WebEnvironment::Test,
-        _ => WebEnvironment::Dev,
-    }
 }
 
 struct ContextAuthorizer;
