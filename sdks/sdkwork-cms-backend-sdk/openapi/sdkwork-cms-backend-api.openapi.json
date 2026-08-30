@@ -25,7 +25,7 @@
           "cms"
         ],
         "summary": "List CMS sites",
-        "operationId": "cms.sites.list",
+        "operationId": "sites.list",
         "parameters": [
           {
             "$ref": "#/components/parameters/Cursor"
@@ -64,7 +64,7 @@
           "cms"
         ],
         "summary": "Create CMS site",
-        "operationId": "cms.sites.create",
+        "operationId": "sites.create",
         "requestBody": {
           "$ref": "#/components/requestBodies/CmsSiteCommand"
         },
@@ -95,7 +95,19 @@
         "x-sdkwork-permission": "cms.site.manage",
         "x-sdkwork-idempotent": true,
         "x-sdkwork-auth-mode": "dual-token",
-        "x-sdkwork-public": false
+        "x-sdkwork-public": false,
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        ]
       }
     },
     "/backend/v3/api/cms/sites/{siteId}": {
@@ -104,7 +116,7 @@
           "cms"
         ],
         "summary": "Retrieve CMS site",
-        "operationId": "cms.sites.retrieve",
+        "operationId": "sites.retrieve",
         "parameters": [
           {
             "$ref": "#/components/parameters/SiteId"
@@ -143,7 +155,7 @@
           "cms"
         ],
         "summary": "Update CMS site",
-        "operationId": "cms.sites.update",
+        "operationId": "sites.update",
         "parameters": [
           {
             "$ref": "#/components/parameters/SiteId"
@@ -188,7 +200,7 @@
           "cms"
         ],
         "summary": "Delete CMS site",
-        "operationId": "cms.sites.delete",
+        "operationId": "sites.delete",
         "parameters": [
           {
             "$ref": "#/components/parameters/SiteId"
@@ -229,7 +241,7 @@
           "cms"
         ],
         "summary": "List CMS channels",
-        "operationId": "cms.channels.list",
+        "operationId": "channels.list",
         "parameters": [
           {
             "$ref": "#/components/parameters/SiteId"
@@ -265,10 +277,20 @@
           "cms"
         ],
         "summary": "Create CMS channel",
-        "operationId": "cms.channels.create",
+        "operationId": "channels.create",
         "parameters": [
           {
             "$ref": "#/components/parameters/SiteId"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
           }
         ],
         "requestBody": {
@@ -310,7 +332,7 @@
           "cms"
         ],
         "summary": "Update CMS channel",
-        "operationId": "cms.channels.update",
+        "operationId": "channels.update",
         "parameters": [
           {
             "$ref": "#/components/parameters/ChannelId"
@@ -352,7 +374,7 @@
           "cms"
         ],
         "summary": "Delete CMS channel",
-        "operationId": "cms.channels.delete",
+        "operationId": "channels.delete",
         "parameters": [
           {
             "$ref": "#/components/parameters/ChannelId"
@@ -393,7 +415,7 @@
           "cms"
         ],
         "summary": "List CMS content types",
-        "operationId": "cms.contentTypes.list",
+        "operationId": "contentTypes.list",
         "parameters": [
           {
             "$ref": "#/components/parameters/SiteId"
@@ -429,10 +451,20 @@
           "cms"
         ],
         "summary": "Create CMS content type",
-        "operationId": "cms.contentTypes.create",
+        "operationId": "contentTypes.create",
         "parameters": [
           {
             "$ref": "#/components/parameters/SiteId"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
           }
         ],
         "requestBody": {
@@ -474,7 +506,7 @@
           "cms"
         ],
         "summary": "Retrieve CMS content type",
-        "operationId": "cms.contentTypes.retrieve",
+        "operationId": "contentTypes.retrieve",
         "parameters": [
           {
             "$ref": "#/components/parameters/ContentTypeId"
@@ -513,7 +545,7 @@
           "cms"
         ],
         "summary": "Update CMS content type",
-        "operationId": "cms.contentTypes.update",
+        "operationId": "contentTypes.update",
         "parameters": [
           {
             "$ref": "#/components/parameters/ContentTypeId"
@@ -555,7 +587,7 @@
           "cms"
         ],
         "summary": "Delete CMS content type",
-        "operationId": "cms.contentTypes.delete",
+        "operationId": "contentTypes.delete",
         "parameters": [
           {
             "$ref": "#/components/parameters/ContentTypeId"
@@ -596,7 +628,7 @@
           "cms"
         ],
         "summary": "List CMS content fields",
-        "operationId": "cms.contentFields.list",
+        "operationId": "contentFields.list",
         "parameters": [
           {
             "$ref": "#/components/parameters/ContentTypeId"
@@ -632,10 +664,20 @@
           "cms"
         ],
         "summary": "Create CMS content field",
-        "operationId": "cms.contentFields.create",
+        "operationId": "contentFields.create",
         "parameters": [
           {
             "$ref": "#/components/parameters/ContentTypeId"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
           }
         ],
         "requestBody": {
@@ -677,7 +719,7 @@
           "cms"
         ],
         "summary": "Update CMS content field",
-        "operationId": "cms.contentFields.update",
+        "operationId": "contentFields.update",
         "parameters": [
           {
             "$ref": "#/components/parameters/FieldId"
@@ -719,7 +761,7 @@
           "cms"
         ],
         "summary": "Delete CMS content field",
-        "operationId": "cms.contentFields.delete",
+        "operationId": "contentFields.delete",
         "parameters": [
           {
             "$ref": "#/components/parameters/FieldId"
@@ -760,7 +802,7 @@
           "cms"
         ],
         "summary": "List CMS taxonomies",
-        "operationId": "cms.taxonomies.list",
+        "operationId": "taxonomies.list",
         "parameters": [
           {
             "$ref": "#/components/parameters/SiteId"
@@ -796,10 +838,20 @@
           "cms"
         ],
         "summary": "Create CMS taxonomy",
-        "operationId": "cms.taxonomies.create",
+        "operationId": "taxonomies.create",
         "parameters": [
           {
             "$ref": "#/components/parameters/SiteId"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
           }
         ],
         "requestBody": {
@@ -841,7 +893,7 @@
           "cms"
         ],
         "summary": "Update CMS taxonomy",
-        "operationId": "cms.taxonomies.update",
+        "operationId": "taxonomies.update",
         "parameters": [
           {
             "$ref": "#/components/parameters/TaxonomyId"
@@ -883,7 +935,7 @@
           "cms"
         ],
         "summary": "Delete CMS taxonomy",
-        "operationId": "cms.taxonomies.delete",
+        "operationId": "taxonomies.delete",
         "parameters": [
           {
             "$ref": "#/components/parameters/TaxonomyId"
@@ -924,7 +976,7 @@
           "cms"
         ],
         "summary": "List CMS taxonomy terms",
-        "operationId": "cms.taxonomyTerms.list",
+        "operationId": "taxonomyTerms.list",
         "parameters": [
           {
             "$ref": "#/components/parameters/TaxonomyId"
@@ -960,10 +1012,20 @@
           "cms"
         ],
         "summary": "Create CMS taxonomy term",
-        "operationId": "cms.taxonomyTerms.create",
+        "operationId": "taxonomyTerms.create",
         "parameters": [
           {
             "$ref": "#/components/parameters/TaxonomyId"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
           }
         ],
         "requestBody": {
@@ -1005,7 +1067,7 @@
           "cms"
         ],
         "summary": "Update CMS taxonomy term",
-        "operationId": "cms.taxonomyTerms.update",
+        "operationId": "taxonomyTerms.update",
         "parameters": [
           {
             "$ref": "#/components/parameters/TermId"
@@ -1047,7 +1109,7 @@
           "cms"
         ],
         "summary": "Delete CMS taxonomy term",
-        "operationId": "cms.taxonomyTerms.delete",
+        "operationId": "taxonomyTerms.delete",
         "parameters": [
           {
             "$ref": "#/components/parameters/TermId"
@@ -1088,7 +1150,7 @@
           "cms"
         ],
         "summary": "List CMS entries for management",
-        "operationId": "cms.entries.management.list",
+        "operationId": "entries.management.list",
         "parameters": [
           {
             "$ref": "#/components/parameters/SiteIdQuery"
@@ -1139,7 +1201,7 @@
           "cms"
         ],
         "summary": "Create CMS entry",
-        "operationId": "cms.entries.create",
+        "operationId": "entries.create",
         "requestBody": {
           "$ref": "#/components/requestBodies/CmsEntryCommand"
         },
@@ -1170,7 +1232,19 @@
         "x-sdkwork-permission": "cms.entry.create",
         "x-sdkwork-idempotent": true,
         "x-sdkwork-auth-mode": "dual-token",
-        "x-sdkwork-public": false
+        "x-sdkwork-public": false,
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        ]
       }
     },
     "/backend/v3/api/cms/entries/{entryId}": {
@@ -1179,7 +1253,7 @@
           "cms"
         ],
         "summary": "Retrieve CMS entry for management",
-        "operationId": "cms.entries.management.retrieve",
+        "operationId": "entries.management.retrieve",
         "parameters": [
           {
             "$ref": "#/components/parameters/EntryId"
@@ -1218,7 +1292,7 @@
           "cms"
         ],
         "summary": "Update CMS entry",
-        "operationId": "cms.entries.update",
+        "operationId": "entries.update",
         "parameters": [
           {
             "$ref": "#/components/parameters/EntryId"
@@ -1263,7 +1337,7 @@
           "cms"
         ],
         "summary": "Delete CMS entry",
-        "operationId": "cms.entries.delete",
+        "operationId": "entries.delete",
         "parameters": [
           {
             "$ref": "#/components/parameters/EntryId"
@@ -1304,7 +1378,7 @@
           "cms"
         ],
         "summary": "Update CMS entry body",
-        "operationId": "cms.entries.body.update",
+        "operationId": "entries.body.update",
         "parameters": [
           {
             "$ref": "#/components/parameters/EntryId"
@@ -1348,7 +1422,7 @@
           "cms"
         ],
         "summary": "Replace CMS entry field values",
-        "operationId": "cms.entries.fields.update",
+        "operationId": "entries.fields.update",
         "parameters": [
           {
             "$ref": "#/components/parameters/EntryId"
@@ -1392,7 +1466,7 @@
           "cms"
         ],
         "summary": "List CMS entry media",
-        "operationId": "cms.entries.media.list",
+        "operationId": "entries.media.list",
         "parameters": [
           {
             "$ref": "#/components/parameters/EntryId"
@@ -1428,10 +1502,20 @@
           "cms"
         ],
         "summary": "Attach Drive-backed media to CMS entry",
-        "operationId": "cms.entries.media.create",
+        "operationId": "entries.media.create",
         "parameters": [
           {
             "$ref": "#/components/parameters/EntryId"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
           }
         ],
         "requestBody": {
@@ -1473,7 +1557,7 @@
           "cms"
         ],
         "summary": "Detach CMS entry media",
-        "operationId": "cms.entries.media.delete",
+        "operationId": "entries.media.delete",
         "parameters": [
           {
             "$ref": "#/components/parameters/EntryId"
@@ -1517,7 +1601,7 @@
           "cms"
         ],
         "summary": "Replace CMS entry taxonomy terms",
-        "operationId": "cms.entries.terms.update",
+        "operationId": "entries.terms.update",
         "parameters": [
           {
             "$ref": "#/components/parameters/EntryId"
@@ -1561,7 +1645,7 @@
           "cms"
         ],
         "summary": "List CMS entry versions",
-        "operationId": "cms.entries.versions.list",
+        "operationId": "entries.versions.list",
         "parameters": [
           {
             "$ref": "#/components/parameters/EntryId"
@@ -1599,10 +1683,20 @@
           "cms"
         ],
         "summary": "Publish CMS entry",
-        "operationId": "cms.entries.publish",
+        "operationId": "entries.publish",
         "parameters": [
           {
             "$ref": "#/components/parameters/EntryId"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
           }
         ],
         "requestBody": {
@@ -1645,10 +1739,20 @@
           "cms"
         ],
         "summary": "Unpublish CMS entry",
-        "operationId": "cms.entries.unpublish",
+        "operationId": "entries.unpublish",
         "parameters": [
           {
             "$ref": "#/components/parameters/EntryId"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
           }
         ],
         "requestBody": {
@@ -1691,10 +1795,20 @@
           "cms"
         ],
         "summary": "Rollback CMS entry",
-        "operationId": "cms.entries.rollback",
+        "operationId": "entries.rollback",
         "parameters": [
           {
             "$ref": "#/components/parameters/EntryId"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
           }
         ],
         "requestBody": {
@@ -1737,10 +1851,20 @@
           "cms"
         ],
         "summary": "Schedule CMS entry publication",
-        "operationId": "cms.entries.schedule",
+        "operationId": "entries.schedule",
         "parameters": [
           {
             "$ref": "#/components/parameters/EntryId"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
           }
         ],
         "requestBody": {
@@ -1782,7 +1906,7 @@
           "cms"
         ],
         "summary": "List CMS pages for management",
-        "operationId": "cms.pages.management.list",
+        "operationId": "pages.management.list",
         "parameters": [
           {
             "$ref": "#/components/parameters/SiteIdQuery"
@@ -1830,7 +1954,7 @@
           "cms"
         ],
         "summary": "Create CMS page",
-        "operationId": "cms.pages.create",
+        "operationId": "pages.create",
         "requestBody": {
           "$ref": "#/components/requestBodies/CmsPageCommand"
         },
@@ -1861,7 +1985,19 @@
         "x-sdkwork-permission": "cms.page.manage",
         "x-sdkwork-idempotent": true,
         "x-sdkwork-auth-mode": "dual-token",
-        "x-sdkwork-public": false
+        "x-sdkwork-public": false,
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        ]
       }
     },
     "/backend/v3/api/cms/pages/{pageId}": {
@@ -1870,7 +2006,7 @@
           "cms"
         ],
         "summary": "Retrieve CMS page for management",
-        "operationId": "cms.pages.management.retrieve",
+        "operationId": "pages.management.retrieve",
         "parameters": [
           {
             "$ref": "#/components/parameters/PageId"
@@ -1909,7 +2045,7 @@
           "cms"
         ],
         "summary": "Update CMS page",
-        "operationId": "cms.pages.update",
+        "operationId": "pages.update",
         "parameters": [
           {
             "$ref": "#/components/parameters/PageId"
@@ -1951,7 +2087,7 @@
           "cms"
         ],
         "summary": "Delete CMS page",
-        "operationId": "cms.pages.delete",
+        "operationId": "pages.delete",
         "parameters": [
           {
             "$ref": "#/components/parameters/PageId"
@@ -1992,7 +2128,7 @@
           "cms"
         ],
         "summary": "Replace CMS page blocks",
-        "operationId": "cms.pages.blocks.update",
+        "operationId": "pages.blocks.update",
         "parameters": [
           {
             "$ref": "#/components/parameters/PageId"
@@ -2036,10 +2172,20 @@
           "cms"
         ],
         "summary": "Publish CMS page",
-        "operationId": "cms.pages.publish",
+        "operationId": "pages.publish",
         "parameters": [
           {
             "$ref": "#/components/parameters/PageId"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
           }
         ],
         "requestBody": {
@@ -2082,7 +2228,7 @@
           "cms"
         ],
         "summary": "List CMS feeds for management",
-        "operationId": "cms.feeds.management.list",
+        "operationId": "feeds.management.list",
         "parameters": [
           {
             "$ref": "#/components/parameters/SiteIdQuery"
@@ -2130,7 +2276,7 @@
           "cms"
         ],
         "summary": "Create CMS feed",
-        "operationId": "cms.feeds.create",
+        "operationId": "feeds.create",
         "requestBody": {
           "$ref": "#/components/requestBodies/CmsFeedCommand"
         },
@@ -2161,7 +2307,19 @@
         "x-sdkwork-permission": "cms.feed.manage",
         "x-sdkwork-idempotent": true,
         "x-sdkwork-auth-mode": "dual-token",
-        "x-sdkwork-public": false
+        "x-sdkwork-public": false,
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        ]
       }
     },
     "/backend/v3/api/cms/feeds/{feedId}": {
@@ -2170,7 +2328,7 @@
           "cms"
         ],
         "summary": "Retrieve CMS feed for management",
-        "operationId": "cms.feeds.management.retrieve",
+        "operationId": "feeds.management.retrieve",
         "parameters": [
           {
             "$ref": "#/components/parameters/FeedId"
@@ -2209,7 +2367,7 @@
           "cms"
         ],
         "summary": "Update CMS feed",
-        "operationId": "cms.feeds.update",
+        "operationId": "feeds.update",
         "parameters": [
           {
             "$ref": "#/components/parameters/FeedId"
@@ -2251,7 +2409,7 @@
           "cms"
         ],
         "summary": "Delete CMS feed",
-        "operationId": "cms.feeds.delete",
+        "operationId": "feeds.delete",
         "parameters": [
           {
             "$ref": "#/components/parameters/FeedId"
@@ -2292,7 +2450,7 @@
           "cms"
         ],
         "summary": "List CMS feed rules",
-        "operationId": "cms.feedRules.list",
+        "operationId": "feedRules.list",
         "parameters": [
           {
             "$ref": "#/components/parameters/FeedId"
@@ -2328,10 +2486,20 @@
           "cms"
         ],
         "summary": "Create CMS feed rule",
-        "operationId": "cms.feedRules.create",
+        "operationId": "feedRules.create",
         "parameters": [
           {
             "$ref": "#/components/parameters/FeedId"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
           }
         ],
         "requestBody": {
@@ -2373,7 +2541,7 @@
           "cms"
         ],
         "summary": "Update CMS feed rule",
-        "operationId": "cms.feedRules.update",
+        "operationId": "feedRules.update",
         "parameters": [
           {
             "$ref": "#/components/parameters/RuleId"
@@ -2415,7 +2583,7 @@
           "cms"
         ],
         "summary": "Delete CMS feed rule",
-        "operationId": "cms.feedRules.delete",
+        "operationId": "feedRules.delete",
         "parameters": [
           {
             "$ref": "#/components/parameters/RuleId"
@@ -2456,7 +2624,7 @@
           "cms"
         ],
         "summary": "List CMS feed items",
-        "operationId": "cms.feedItems.list",
+        "operationId": "feedItems.list",
         "parameters": [
           {
             "$ref": "#/components/parameters/FeedId"
@@ -2498,10 +2666,20 @@
           "cms"
         ],
         "summary": "Upsert CMS feed items",
-        "operationId": "cms.feedItems.update",
+        "operationId": "feedItems.update",
         "parameters": [
           {
             "$ref": "#/components/parameters/FeedId"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
           }
         ],
         "requestBody": {
@@ -2543,7 +2721,7 @@
           "cms"
         ],
         "summary": "Delete CMS feed item",
-        "operationId": "cms.feedItems.delete",
+        "operationId": "feedItems.delete",
         "parameters": [
           {
             "$ref": "#/components/parameters/ItemId"
@@ -2584,10 +2762,20 @@
           "cms"
         ],
         "summary": "Publish CMS feed",
-        "operationId": "cms.feeds.publish",
+        "operationId": "feeds.publish",
         "parameters": [
           {
             "$ref": "#/components/parameters/FeedId"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
           }
         ],
         "requestBody": {
@@ -2630,7 +2818,7 @@
           "cms"
         ],
         "summary": "Retrieve CMS feed snapshot",
-        "operationId": "cms.feeds.snapshots.retrieve",
+        "operationId": "feeds.snapshots.retrieve",
         "parameters": [
           {
             "$ref": "#/components/parameters/FeedId"
@@ -2674,7 +2862,7 @@
           "cms"
         ],
         "summary": "List CMS audit logs",
-        "operationId": "cms.auditLogs.list",
+        "operationId": "auditLogs.list",
         "parameters": [
           {
             "$ref": "#/components/parameters/SiteIdQuery"
@@ -2737,7 +2925,7 @@
           "cms"
         ],
         "summary": "List CMS outbox events",
-        "operationId": "cms.outboxEvents.list",
+        "operationId": "outboxEvents.list",
         "parameters": [
           {
             "$ref": "#/components/parameters/SiteIdQuery"
@@ -2790,10 +2978,20 @@
           "cms"
         ],
         "summary": "Retry CMS outbox event",
-        "operationId": "cms.outboxEvents.retry",
+        "operationId": "outboxEvents.retry",
         "parameters": [
           {
             "$ref": "#/components/parameters/EventId"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
           }
         ],
         "responses": {

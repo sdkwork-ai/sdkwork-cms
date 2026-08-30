@@ -44,21 +44,78 @@
   "media": {
     "icons": {
       "primary": {
-        "id": "cms-primary-icon",
+        "id": "sdkwork-cms-primary-icon",
         "type": "ICON",
         "purpose": "PRIMARY",
-        "url": "https://sdkwork.com/assets/apps/sdkwork-cms/icon.png",
-        "platform": "WEB",
+        "url": "https://cdn.sdkwork.com/apps/sdkwork-cms/assets/icon-1024.png",
+        "platform": "APP",
         "locale": "en-US",
         "width": 1024,
         "height": 1024,
         "format": "PNG",
-        "enabled": true
+        "fileSizeBytes": 524288,
+        "alphaChannel": false,
+        "sortOrder": 0,
+        "enabled": true,
+        "metadata": {
+          "generatedPlaceholder": true
+        }
       },
-      "platform": []
+      "platform": [],
+      "metadata": {
+        "generatedPlaceholder": true
+      }
     },
-    "screenshots": [],
-    "previews": []
+    "screenshots": [
+      {
+        "id": "sdkwork-cms-web-screenshot",
+        "type": "SCREENSHOT",
+        "purpose": "CATALOG_SCREENSHOT",
+        "url": "https://cdn.sdkwork.com/apps/sdkwork-cms/media/web-screenshot.png",
+        "platform": "WEB",
+        "locale": "en-US",
+        "deviceClass": "BROWSER",
+        "displayType": "WEB_DESKTOP",
+        "width": 1920,
+        "height": 1080,
+        "format": "PNG",
+        "fileSizeBytes": 1048576,
+        "alphaChannel": false,
+        "caption": "SDKWork CMS product screenshot.",
+        "sortOrder": 0,
+        "enabled": true,
+        "metadata": {
+          "generatedPlaceholder": true,
+          "altText": "SDKWork CMS app screenshot."
+        }
+      }
+    ],
+    "previews": [
+      {
+        "id": "sdkwork-cms-catalog-preview",
+        "type": "PREVIEW_IMAGE",
+        "purpose": "CATALOG_PREVIEW",
+        "url": "https://cdn.sdkwork.com/apps/sdkwork-cms/media/preview-cover.png",
+        "platform": "WEB",
+        "locale": "en-US",
+        "width": 1600,
+        "height": 900,
+        "format": "PNG",
+        "fileSizeBytes": 786432,
+        "alphaChannel": false,
+        "caption": "SDKWork CMS preview.",
+        "sortOrder": 0,
+        "enabled": true,
+        "metadata": {
+          "generatedPlaceholder": true,
+          "altText": "SDKWork CMS preview cover."
+        }
+      }
+    ],
+    "metadata": {
+      "assetVersion": "0.1.0",
+      "defaultLocale": "en-US"
+    }
   },
   "publish": {
     "status": "INTERNAL",
@@ -68,11 +125,19 @@
     "installPlatforms": [
       "API"
     ],
-    "stores": []
+    "stores": [],
+    "defaultPackageId": "container-x64-cloud-container-oci",
+    "installSkill": {
+      "name": "sdkwork-skills-app"
+    },
+    "storeUrl": "https://sdkwork.com/apps/sdkwork-cms"
   },
   "artifacts": {
     "installConfig": {
       "defaultPackageId": "container-x64-cloud-container-oci",
+      "installCommand": "sdkwork install sdkwork-cms",
+      "launchCommand": "sdkwork open sdkwork-cms",
+      "uninstallCommand": "sdkwork uninstall sdkwork-cms",
       "packages": [
         {
           "id": "container-x64-cloud-container-oci",
@@ -81,13 +146,46 @@
           "packageFormat": "DOCKER_IMAGE",
           "platform": "API",
           "architecture": "x64",
-          "url": "oci://registry.sdkwork.com/sdkwork/cms@sha256:TODO",
+          "url": "https://registry.example.com/sdkwork/sdkwork-cms:v1@sha256:0000000000000000000000000000000000000000000000000000000000000001",
           "checksumAlgorithm": "SHA-256",
           "checksum": "TODO",
           "sizeBytes": 0,
           "enabled": false,
           "deploymentProfile": "cloud",
-          "runtimeTarget": "container"
+          "runtimeTarget": "container",
+          "profileBinding": "fixed"
+        },
+        {
+          "id": "linux-x64-cloud-server-tar-gz",
+          "name": "Sdkwork Cms cloud server archive",
+          "sourceType": "BINARY_URL",
+          "packageFormat": "TAR_GZ",
+          "platform": "API",
+          "url": "https://cdn.sdkwork.com/apps/sdkwork-cms/STABLE/0.1.0/linux-x64-cloud-server-tar-gz-0.1.0.tar.gz",
+          "architecture": "x64",
+          "checksumAlgorithm": "SHA-256",
+          "checksum": "31457c3263cb95abf1a499594fdbec4616597cdc255c4933e33cf5615acd0fa6",
+          "deploymentProfile": "cloud",
+          "runtimeTarget": "server",
+          "profileBinding": "fixed",
+          "enabled": true,
+          "metadata": {}
+        },
+        {
+          "id": "linux-x64-standalone-server-tar-gz",
+          "name": "Sdkwork Cms standalone server archive",
+          "sourceType": "BINARY_URL",
+          "packageFormat": "TAR_GZ",
+          "platform": "API",
+          "url": "https://cdn.sdkwork.com/apps/sdkwork-cms/STABLE/0.1.0/linux-x64-standalone-server-tar-gz-0.1.0.tar.gz",
+          "architecture": "x64",
+          "checksumAlgorithm": "SHA-256",
+          "checksum": "6b01fe13426ec0c47bf3f43ec1092c51f10020aa0de91113ab806c64dacf4ff7",
+          "deploymentProfile": "standalone",
+          "runtimeTarget": "server",
+          "profileBinding": "fixed",
+          "enabled": true,
+          "metadata": {}
         }
       ]
     }
@@ -95,19 +193,34 @@
   "release": {
     "currentVersion": "0.1.0",
     "latest": {
+      "STABLE": "0.1.0",
       "DEV": "0.1.0"
     },
     "notes": [
       {
         "version": "0.1.0",
-        "channel": "DEV",
-        "current": true,
-        "packageIds": [
-          "container-x64-cloud-container-oci"
+        "releaseChannel": "STABLE",
+        "title": "SDKWork CMS 0.1.0",
+        "summary": "SDKWork CMS initialized standard release.",
+        "content": "Initial SDKWork App Standard v3 manifest for SDKWork CMS.",
+        "highlights": [
+          "SDKWork App Standard v3 configuration initialized",
+          "platform_app projection metadata standardized",
+          "Download package matrix normalized"
         ],
-        "notes": "Initial CMS contract skeleton."
+        "packageIds": [
+          "container-x64-cloud-container-oci",
+          "linux-x64-cloud-server-tar-gz",
+          "linux-x64-standalone-server-tar-gz"
+        ],
+        "publishedAt": "2026-05-07T00:00:00Z",
+        "current": true,
+        "forceUpdate": false,
+        "minSupportedVersion": "0.1.0",
+        "metadata": {}
       }
-    ]
+    ],
+    "defaultChannel": "STABLE"
   },
   "security": {
     "checksumRequired": true,
@@ -119,6 +232,8 @@
   },
   "metadata": {
     "status": "contract-skeleton",
-    "todo": "Replace placeholder media and artifact values before app registration."
+    "todo": "Replace placeholder media and artifact values before app registration.",
+    "deploymentConfig": "etc/sdkwork.deployment.config.json",
+    "standardOwner": "sdkwork-platform"
   }
 }

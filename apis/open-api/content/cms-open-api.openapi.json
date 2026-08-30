@@ -25,7 +25,7 @@
           "cms"
         ],
         "summary": "List published CMS entries",
-        "operationId": "cms.entries.list",
+        "operationId": "entries.list",
         "parameters": [
           {
             "$ref": "#/components/parameters/SiteCode"
@@ -79,7 +79,7 @@
           "cms"
         ],
         "summary": "Retrieve a published CMS entry",
-        "operationId": "cms.entries.retrieve",
+        "operationId": "entries.retrieve",
         "parameters": [
           {
             "name": "entryId",
@@ -125,7 +125,7 @@
           "cms"
         ],
         "summary": "Resolve a published CMS entry by slug",
-        "operationId": "cms.entries.retrieve",
+        "operationId": "entries.retrieve",
         "parameters": [
           {
             "$ref": "#/components/parameters/SiteCode"
@@ -179,7 +179,7 @@
           "cms"
         ],
         "summary": "Resolve a published CMS page by path",
-        "operationId": "cms.pages.retrieve",
+        "operationId": "pages.retrieve",
         "parameters": [
           {
             "$ref": "#/components/parameters/SiteCode"
@@ -233,7 +233,7 @@
           "cms"
         ],
         "summary": "List published CMS feed items",
-        "operationId": "cms.feeds.items.list",
+        "operationId": "feeds.items.list",
         "parameters": [
           {
             "name": "feedCode",
