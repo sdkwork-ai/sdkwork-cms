@@ -70,17 +70,6 @@
     ],
     "stores": []
   },
-  "environments": {
-    "dev": {
-      "accessUrl": "http://127.0.0.1:18080"
-    },
-    "test": {
-      "accessUrl": "https://test.sdkwork.com/cms"
-    },
-    "prod": {
-      "accessUrl": "https://api.sdkwork.com/cms"
-    }
-  },
   "artifacts": {
     "installConfig": {
       "defaultPackageId": "container-x64-cloud-container-oci",
