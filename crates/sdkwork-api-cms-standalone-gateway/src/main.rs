@@ -5,7 +5,7 @@ use sdkwork_iam_web_adapter::{
     build_web_framework_builder, iam_web_request_context_resolver_from_database_pool_for_audiences,
     iam_web_request_context_resolver_from_env, IamAuditEmitter, IamSecurityEventEmitter,
 };
-use sdkwork_web_bootstrap::{infra_public_path_prefixes, ComposedApiAssembly};
+use sdkwork_web_bootstrap::{ApiModuleRegistry, ComposedApiAssembly, infra_public_path_prefixes};
 use tracing_subscriber::EnvFilter;
 
 const APPLICATION_ID: &str = "sdkwork-cms";
@@ -56,7 +56,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 environment,
             )));
     }
-    let app = ComposedApiAssembly::try_compose("SDKWork CMS API", vec![assembly])?
+    let mut module_registry = ApiModuleRegistry::new();
+    module_registry.add_modules(vec![assembly]);
+    let app = module_registry
+        .try_compose("SDKWork CMS API")?
         .into_hosted(framework)
         .router;
 

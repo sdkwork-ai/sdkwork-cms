@@ -18,9 +18,7 @@ use sdkwork_content_cms_service::error::CmsResult;
 use sdkwork_content_cms_service::ports::{CmsEventPublisher, CmsIamAuthorizer, CmsRepository};
 use sdkwork_content_cms_service::CmsService;
 use sdkwork_database_sqlx::DatabasePool;
-use sdkwork_web_bootstrap::{
-    ApiAssemblyContribution, DatabasePoolReadinessCheck, PgPoolReadinessCheck, ReadinessCheck,
-};
+use sdkwork_web_bootstrap::{ApiAssemblyContribution, DatabasePoolReadinessCheck, PgPoolReadinessCheck, ReadinessCheck, WebModule};
 use sdkwork_web_core::HttpRouteManifest;
 
 /// Indivisible host-neutral API assembly contribution (web-bootstrap contract).
@@ -150,4 +148,17 @@ impl CmsEventPublisher for RepositoryEventPublisher {
             .await
             .map(|_| ())
     }
+}
+
+/// Canonical Web Module definition for this application
+/// (API_ASSEMBLY_SPEC §4.1.1): the complete HTTP surface — every route,
+/// manifest, and OpenAPI document of this owner — as one installable module.
+pub async fn web_module() -> Result<WebModule, String> {
+    Ok(WebModule::from_contribution(assemble_api_router().await?))
+}
+
+/// Same as [`web_module`] but composed on a process-shared database pool
+/// (platform gateways, API_ASSEMBLY_SPEC §4.1.1).
+pub async fn web_module_with_pool(pool: DatabasePool) -> Result<WebModule, String> {
+    Ok(WebModule::from_contribution(assemble_api_router_with_pool(pool).await?))
 }
