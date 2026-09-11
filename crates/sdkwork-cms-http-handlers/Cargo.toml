@@ -1,9 +1,13 @@
 [package]
+rust-version.workspace = true
 name = "sdkwork-cms-http-handlers"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
 
+
+[lints]
+workspace = true
 [dependencies]
 axum.workspace = true
 serde.workspace = true
