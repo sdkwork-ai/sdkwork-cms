@@ -32,7 +32,7 @@
 
 **Files:**
 - Create: `AGENTS.md`
-- Create: `sdkwork.app.config.json`
+- Create: `agent.app.config.json`
 - Create: `.sdkwork/README.md`
 - Create: top-level directory README placeholders
 

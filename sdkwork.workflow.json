@@ -6,7 +6,7 @@
     "name": "sdkwork-cms",
     "repository": "sdkwork-ai/sdkwork-cms",
     "sourcePath": ".",
-    "configPath": "sdkwork.app.config.json"
+    "configPath": "agent.app.config.json"
   },
   "release": {
     "artifactPrefix": "sdkwork-cms",
