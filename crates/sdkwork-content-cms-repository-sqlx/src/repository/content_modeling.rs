@@ -105,9 +105,10 @@ impl CmsSqlxRepository {
     ) -> CmsResult<CmsContentType> {
         let row: (i64, String, i64, String, String, String, i64, i32) = sqlx::query_as(
             "SELECT id, uuid, site_id, code, name, content_kind, schema_version, status 
-             FROM cms_content_type WHERE tenant_id = $1 AND id = $2 AND deleted_at IS NULL"
+             FROM cms_content_type WHERE tenant_id = $1 AND organization_id = $2 AND id = $3 AND deleted_at IS NULL"
         )
         .bind(ctx.tenant_id)
+        .bind(ctx.organization_id)
         .bind(content_type_id)
         .fetch_optional(self.pool())
         .await
@@ -136,16 +137,17 @@ impl CmsSqlxRepository {
 
         let row: (i64, String, i64, String, String, String, i64, i32) = sqlx::query_as(
             "UPDATE cms_content_type SET 
-                code = COALESCE($4, code),
-                name = COALESCE($5, name),
-                content_kind = COALESCE($6, content_kind),
-                updated_at = $7,
-                updated_by = $8,
+                code = COALESCE($5, code),
+                name = COALESCE($6, name),
+                content_kind = COALESCE($7, content_kind),
+                updated_at = $8,
+                updated_by = $9,
                 version = version + 1
-             WHERE tenant_id = $1 AND id = $2 AND version = $3 AND deleted_at IS NULL
+             WHERE tenant_id = $1 AND organization_id = $2 AND id = $3 AND version = $4 AND deleted_at IS NULL
              RETURNING id, uuid, site_id, code, name, content_kind, schema_version, status"
         )
         .bind(ctx.tenant_id)
+        .bind(ctx.organization_id)
         .bind(content_type_id)
         .bind(version)
         .bind(&command.code)
@@ -180,9 +182,10 @@ impl CmsSqlxRepository {
     ) -> CmsResult<CommandResult> {
         let now = self.current_timestamp();
         let result = sqlx::query(
-            "UPDATE cms_content_type SET status = 9, deleted_at = $3, deleted_by = $4 WHERE tenant_id = $1 AND id = $2 AND deleted_at IS NULL"
+            "UPDATE cms_content_type SET status = 9, deleted_at = $4, deleted_by = $5 WHERE tenant_id = $1 AND organization_id = $2 AND id = $3 AND deleted_at IS NULL"
         )
         .bind(ctx.tenant_id)
+        .bind(ctx.organization_id)
         .bind(content_type_id)
         .bind(&now)
         .bind(ctx.user_id)

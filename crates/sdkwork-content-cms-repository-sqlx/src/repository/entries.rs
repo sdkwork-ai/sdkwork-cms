@@ -99,9 +99,10 @@ impl CmsSqlxRepository {
     ) -> CmsResult<CommandResult> {
         let now = self.current_timestamp();
         let result = sqlx::query(
-            "UPDATE cms_entry SET entry_status = 9, deleted_at = $3, deleted_by = $4 WHERE tenant_id = $1 AND id = $2 AND deleted_at IS NULL"
+            "UPDATE cms_entry SET entry_status = 9, deleted_at = $4, deleted_by = $5 WHERE tenant_id = $1 AND organization_id = $2 AND id = $3 AND deleted_at IS NULL"
         )
         .bind(ctx.tenant_id)
+        .bind(ctx.organization_id)
         .bind(entry_id)
         .bind(&now)
         .bind(ctx.user_id)
