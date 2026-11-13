@@ -2,8 +2,8 @@ use std::sync::Arc;
 
 use crate::ports::{
     CmsCacheInvalidationPort, CmsDriveMediaPort, CmsEngagementPort, CmsEventPublisher,
-    CmsIamAuthorizer, CmsNotificationPort, CmsPreviewTokenPort, CmsRepository,
-    CmsSchedulerPort, CmsSearchSyncPort, CmsSitemapProjectionPort, CmsWebhookPort,
+    CmsIamAuthorizer, CmsNotificationPort, CmsPreviewTokenPort, CmsRepository, CmsSchedulerPort,
+    CmsSearchSyncPort, CmsSitemapProjectionPort, CmsWebhookPort,
 };
 
 #[derive(Clone)]

@@ -106,7 +106,15 @@ pub trait CmsEngagementPort: Send + Sync {
 
 #[async_trait]
 pub trait CmsSitemapProjectionPort: Send + Sync {
-    async fn request_sitemap_projection(&self, ctx: &CmsRequestContext, site_id: CmsId) -> CmsResult<()>;
+    async fn request_sitemap_projection(
+        &self,
+        ctx: &CmsRequestContext,
+        site_id: CmsId,
+    ) -> CmsResult<()>;
 
-    async fn request_rss_projection(&self, ctx: &CmsRequestContext, feed_id: CmsId) -> CmsResult<()>;
+    async fn request_rss_projection(
+        &self,
+        ctx: &CmsRequestContext,
+        feed_id: CmsId,
+    ) -> CmsResult<()>;
 }

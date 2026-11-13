@@ -109,7 +109,8 @@ impl CmsService {
     ) -> CmsResult<CmsEntry> {
         if let Some(ref token) = query.preview_token {
             if let Some(port) = self.preview_token_port() {
-                port.validate_preview_token(ctx, token, "entry", query.entry_id).await?;
+                port.validate_preview_token(ctx, token, "entry", query.entry_id)
+                    .await?;
             }
         }
         self.repository().retrieve_entry(ctx, query.entry_id).await

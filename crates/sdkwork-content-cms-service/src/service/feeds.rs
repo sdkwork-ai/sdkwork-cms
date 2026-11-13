@@ -22,7 +22,11 @@ impl CmsService {
         self.repository().create_feed(ctx, command).await
     }
 
-    pub async fn retrieve_feed(&self, ctx: &CmsRequestContext, feed_id: CmsId) -> CmsResult<CmsFeed> {
+    pub async fn retrieve_feed(
+        &self,
+        ctx: &CmsRequestContext,
+        feed_id: CmsId,
+    ) -> CmsResult<CmsFeed> {
         ctx.require_permission("cms.feed.read")?;
         self.repository().retrieve_feed(ctx, feed_id).await
     }
@@ -71,7 +75,9 @@ impl CmsService {
         command: FeedRuleCommand,
     ) -> CmsResult<CmsFeedRule> {
         ctx.require_permission("cms.feed.manage")?;
-        self.repository().update_feed_rule(ctx, rule_id, command).await
+        self.repository()
+            .update_feed_rule(ctx, rule_id, command)
+            .await
     }
 
     pub async fn delete_feed_rule(
@@ -117,26 +123,36 @@ impl CmsService {
     ) -> CmsResult<CmsPublishSnapshot> {
         ctx.require_permission("cms.feed.publish")?;
 
-        let feed = self.repository().retrieve_feed(ctx, command.owner_id).await?;
+        let feed = self
+            .repository()
+            .retrieve_feed(ctx, command.owner_id)
+            .await?;
 
-        let _composed = self.compose_feed(ctx, feed.id, feed.feed_kind.as_str()).await?;
+        let _composed = self
+            .compose_feed(ctx, feed.id, feed.feed_kind.as_str())
+            .await?;
 
         let snapshot = self.repository().publish_feed(ctx, command.clone()).await?;
-        let _ = self.event_publisher().enqueue(
-            ctx,
-            CmsOutboxEventDraft {
-                aggregate_type: "feed".to_string(),
-                aggregate_id: command.owner_id,
-                event_type: CmsEventType::FeedPublished,
-                payload_json: serde_json::to_string(&serde_json::json!({
-                    "feed_id": command.owner_id,
-                    "snapshot_id": snapshot.id,
-                }))
-                .unwrap_or_default(),
-            },
-        ).await;
+        let _ = self
+            .event_publisher()
+            .enqueue(
+                ctx,
+                CmsOutboxEventDraft {
+                    aggregate_type: "feed".to_string(),
+                    aggregate_id: command.owner_id,
+                    event_type: CmsEventType::FeedPublished,
+                    payload_json: serde_json::to_string(&serde_json::json!({
+                        "feed_id": command.owner_id,
+                        "snapshot_id": snapshot.id,
+                    }))
+                    .unwrap_or_default(),
+                },
+            )
+            .await;
         if let Some(port) = self.cache_invalidation_port() {
-            let _ = port.request_cache_invalidation(ctx, &format!("feed:{}", command.owner_id)).await;
+            let _ = port
+                .request_cache_invalidation(ctx, &format!("feed:{}", command.owner_id))
+                .await;
         }
         Ok(snapshot)
     }
@@ -147,7 +163,9 @@ impl CmsService {
         snapshot_id: CmsId,
     ) -> CmsResult<CmsFeedSnapshot> {
         ctx.require_permission("cms.feed.read")?;
-        self.repository().retrieve_feed_snapshot(ctx, snapshot_id).await
+        self.repository()
+            .retrieve_feed_snapshot(ctx, snapshot_id)
+            .await
     }
 
     pub async fn compose_feed(
@@ -159,15 +177,18 @@ impl CmsService {
         let mut all_items: Vec<CmsFeedItem> = Vec::new();
         let mut seen_ids: std::collections::HashSet<CmsId> = std::collections::HashSet::new();
 
-        let curated_items = self.repository().list_feed_items(
-            ctx,
-            ListFeedItemsQuery {
-                feed_id,
-                status: Some(1),
-                cursor: None,
-                limit: 1000,
-            },
-        ).await?;
+        let curated_items = self
+            .repository()
+            .list_feed_items(
+                ctx,
+                ListFeedItemsQuery {
+                    feed_id,
+                    status: Some(1),
+                    cursor: None,
+                    limit: 1000,
+                },
+            )
+            .await?;
 
         for item in &curated_items.items {
             if item.pinned {
@@ -178,15 +199,18 @@ impl CmsService {
             }
         }
 
-        let rules = self.repository().list_feed_rules(
-            ctx,
-            ListFeedRulesQuery {
-                feed_id,
-                enabled: Some(true),
-                cursor: None,
-                limit: 100,
-            },
-        ).await?;
+        let rules = self
+            .repository()
+            .list_feed_rules(
+                ctx,
+                ListFeedRulesQuery {
+                    feed_id,
+                    enabled: Some(true),
+                    cursor: None,
+                    limit: 100,
+                },
+            )
+            .await?;
 
         for rule in rules.items {
             match rule.rule_kind.as_str() {
@@ -201,20 +225,23 @@ impl CmsService {
                     }
                 }
                 "rule" => {
-                    let entries = self.repository().list_entries(
-                        ctx,
-                        ListEntriesQuery {
-                            site_id: None,
-                            content_type_id: None,
-                            channel_id: None,
-                            locale: None,
-                            entry_status: None,
-                            publication_status: Some(20),
-                            author_user_id: None,
-                            cursor: None,
-                            limit: 50,
-                        },
-                    ).await?;
+                    let entries = self
+                        .repository()
+                        .list_entries(
+                            ctx,
+                            ListEntriesQuery {
+                                site_id: None,
+                                content_type_id: None,
+                                channel_id: None,
+                                locale: None,
+                                entry_status: None,
+                                publication_status: Some(20),
+                                author_user_id: None,
+                                cursor: None,
+                                limit: 50,
+                            },
+                        )
+                        .await?;
 
                     for entry in entries.items {
                         if seen_ids.insert(entry.id) {
@@ -243,20 +270,23 @@ impl CmsService {
 
                     let remaining = 50u32.saturating_sub(all_items.len() as u32);
                     if remaining > 0 {
-                        let entries = self.repository().list_entries(
-                            ctx,
-                            ListEntriesQuery {
-                                site_id: None,
-                                content_type_id: None,
-                                channel_id: None,
-                                locale: None,
-                                entry_status: None,
-                                publication_status: Some(20),
-                                author_user_id: None,
-                                cursor: None,
-                                limit: remaining,
-                            },
-                        ).await?;
+                        let entries = self
+                            .repository()
+                            .list_entries(
+                                ctx,
+                                ListEntriesQuery {
+                                    site_id: None,
+                                    content_type_id: None,
+                                    channel_id: None,
+                                    locale: None,
+                                    entry_status: None,
+                                    publication_status: Some(20),
+                                    author_user_id: None,
+                                    cursor: None,
+                                    limit: remaining,
+                                },
+                            )
+                            .await?;
 
                         for entry in entries.items {
                             if seen_ids.insert(entry.id) {

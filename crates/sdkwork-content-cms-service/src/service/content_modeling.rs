@@ -9,11 +9,15 @@ fn validate_code(code: &str) -> CmsResult<()> {
     }
     let first = code.as_bytes()[0];
     if !first.is_ascii_lowercase() {
-        return Err(CmsError::validation("code must start with a lowercase letter"));
+        return Err(CmsError::validation(
+            "code must start with a lowercase letter",
+        ));
     }
     for ch in code.chars() {
         if !ch.is_ascii_lowercase() && !ch.is_ascii_digit() && ch != '_' {
-            return Err(CmsError::validation("code must contain only lowercase letters, digits, and underscores"));
+            return Err(CmsError::validation(
+                "code must contain only lowercase letters, digits, and underscores",
+            ));
         }
     }
     Ok(())
@@ -29,7 +33,9 @@ fn validate_name(name: &str) -> CmsResult<()> {
 fn validate_content_kind(kind: &str) -> CmsResult<()> {
     match kind {
         "entry" | "page" | "block" | "fragment" => Ok(()),
-        _ => Err(CmsError::validation("content_kind must be one of: entry, page, block, fragment")),
+        _ => Err(CmsError::validation(
+            "content_kind must be one of: entry, page, block, fragment",
+        )),
     }
 }
 
@@ -76,7 +82,9 @@ impl CmsService {
         content_type_id: CmsId,
     ) -> CmsResult<CmsContentType> {
         ctx.require_permission("cms.content_type.read")?;
-        self.repository().retrieve_content_type(ctx, content_type_id).await
+        self.repository()
+            .retrieve_content_type(ctx, content_type_id)
+            .await
     }
 
     pub async fn update_content_type(
@@ -97,7 +105,9 @@ impl CmsService {
             validate_content_kind(kind)?;
         }
 
-        self.repository().update_content_type(ctx, content_type_id, command).await
+        self.repository()
+            .update_content_type(ctx, content_type_id, command)
+            .await
     }
 
     pub async fn delete_content_type(
@@ -106,7 +116,9 @@ impl CmsService {
         content_type_id: CmsId,
     ) -> CmsResult<CommandResult> {
         ctx.require_permission("cms.content_type.manage")?;
-        self.repository().delete_content_type(ctx, content_type_id).await
+        self.repository()
+            .delete_content_type(ctx, content_type_id)
+            .await
     }
 
     pub async fn list_content_fields(
@@ -156,7 +168,9 @@ impl CmsService {
             validate_field_kind(kind)?;
         }
 
-        self.repository().update_content_field(ctx, field_id, command).await
+        self.repository()
+            .update_content_field(ctx, field_id, command)
+            .await
     }
 
     pub async fn delete_content_field(

@@ -6,8 +6,16 @@ use crate::error::CmsResult;
 
 #[async_trait]
 pub trait CmsRepository: Send + Sync {
-    async fn list_sites(&self, ctx: &CmsRequestContext, query: ListSitesQuery) -> CmsResult<CmsSitePage>;
-    async fn create_site(&self, ctx: &CmsRequestContext, command: SiteCommand) -> CmsResult<CmsSite>;
+    async fn list_sites(
+        &self,
+        ctx: &CmsRequestContext,
+        query: ListSitesQuery,
+    ) -> CmsResult<CmsSitePage>;
+    async fn create_site(
+        &self,
+        ctx: &CmsRequestContext,
+        command: SiteCommand,
+    ) -> CmsResult<CmsSite>;
     async fn retrieve_site(&self, ctx: &CmsRequestContext, site_id: CmsId) -> CmsResult<CmsSite>;
     async fn update_site(
         &self,
@@ -15,7 +23,11 @@ pub trait CmsRepository: Send + Sync {
         site_id: CmsId,
         command: SiteCommand,
     ) -> CmsResult<CmsSite>;
-    async fn delete_site(&self, ctx: &CmsRequestContext, site_id: CmsId) -> CmsResult<CommandResult>;
+    async fn delete_site(
+        &self,
+        ctx: &CmsRequestContext,
+        site_id: CmsId,
+    ) -> CmsResult<CommandResult>;
 
     async fn list_channels(
         &self,
@@ -132,15 +144,24 @@ pub trait CmsRepository: Send + Sync {
         term_id: CmsId,
     ) -> CmsResult<CommandResult>;
 
-    async fn create_entry(&self, ctx: &CmsRequestContext, command: EntryCommand) -> CmsResult<CmsEntry>;
+    async fn create_entry(
+        &self,
+        ctx: &CmsRequestContext,
+        command: EntryCommand,
+    ) -> CmsResult<CmsEntry>;
     async fn update_entry(
         &self,
         ctx: &CmsRequestContext,
         entry_id: CmsId,
         command: EntryCommand,
     ) -> CmsResult<CmsEntry>;
-    async fn delete_entry(&self, ctx: &CmsRequestContext, entry_id: CmsId) -> CmsResult<CommandResult>;
-    async fn retrieve_entry(&self, ctx: &CmsRequestContext, entry_id: CmsId) -> CmsResult<CmsEntry>;
+    async fn delete_entry(
+        &self,
+        ctx: &CmsRequestContext,
+        entry_id: CmsId,
+    ) -> CmsResult<CommandResult>;
+    async fn retrieve_entry(&self, ctx: &CmsRequestContext, entry_id: CmsId)
+        -> CmsResult<CmsEntry>;
     async fn list_entries(
         &self,
         ctx: &CmsRequestContext,
@@ -209,17 +230,32 @@ pub trait CmsRepository: Send + Sync {
         command: ScheduleCommand,
     ) -> CmsResult<CmsEntry>;
 
-    async fn list_pages(&self, ctx: &CmsRequestContext, query: ListPagesQuery) -> CmsResult<CmsPagePage>;
-    async fn create_page(&self, ctx: &CmsRequestContext, command: PageCommand)
-        -> CmsResult<CmsPageModel>;
-    async fn retrieve_page(&self, ctx: &CmsRequestContext, page_id: CmsId) -> CmsResult<CmsPageModel>;
+    async fn list_pages(
+        &self,
+        ctx: &CmsRequestContext,
+        query: ListPagesQuery,
+    ) -> CmsResult<CmsPagePage>;
+    async fn create_page(
+        &self,
+        ctx: &CmsRequestContext,
+        command: PageCommand,
+    ) -> CmsResult<CmsPageModel>;
+    async fn retrieve_page(
+        &self,
+        ctx: &CmsRequestContext,
+        page_id: CmsId,
+    ) -> CmsResult<CmsPageModel>;
     async fn update_page(
         &self,
         ctx: &CmsRequestContext,
         page_id: CmsId,
         command: PageCommand,
     ) -> CmsResult<CmsPageModel>;
-    async fn delete_page(&self, ctx: &CmsRequestContext, page_id: CmsId) -> CmsResult<CommandResult>;
+    async fn delete_page(
+        &self,
+        ctx: &CmsRequestContext,
+        page_id: CmsId,
+    ) -> CmsResult<CommandResult>;
     async fn replace_page_blocks(
         &self,
         ctx: &CmsRequestContext,
@@ -231,8 +267,16 @@ pub trait CmsRepository: Send + Sync {
         command: PublishCommand,
     ) -> CmsResult<CmsPublishSnapshot>;
 
-    async fn list_feeds(&self, ctx: &CmsRequestContext, query: ListFeedsQuery) -> CmsResult<CmsFeedPage>;
-    async fn create_feed(&self, ctx: &CmsRequestContext, command: FeedCommand) -> CmsResult<CmsFeed>;
+    async fn list_feeds(
+        &self,
+        ctx: &CmsRequestContext,
+        query: ListFeedsQuery,
+    ) -> CmsResult<CmsFeedPage>;
+    async fn create_feed(
+        &self,
+        ctx: &CmsRequestContext,
+        command: FeedCommand,
+    ) -> CmsResult<CmsFeed>;
     async fn retrieve_feed(&self, ctx: &CmsRequestContext, feed_id: CmsId) -> CmsResult<CmsFeed>;
     async fn update_feed(
         &self,
@@ -240,7 +284,11 @@ pub trait CmsRepository: Send + Sync {
         feed_id: CmsId,
         command: FeedCommand,
     ) -> CmsResult<CmsFeed>;
-    async fn delete_feed(&self, ctx: &CmsRequestContext, feed_id: CmsId) -> CmsResult<CommandResult>;
+    async fn delete_feed(
+        &self,
+        ctx: &CmsRequestContext,
+        feed_id: CmsId,
+    ) -> CmsResult<CommandResult>;
     async fn list_feed_rules(
         &self,
         ctx: &CmsRequestContext,
@@ -257,8 +305,11 @@ pub trait CmsRepository: Send + Sync {
         rule_id: CmsId,
         command: FeedRuleCommand,
     ) -> CmsResult<CmsFeedRule>;
-    async fn delete_feed_rule(&self, ctx: &CmsRequestContext, rule_id: CmsId)
-        -> CmsResult<CommandResult>;
+    async fn delete_feed_rule(
+        &self,
+        ctx: &CmsRequestContext,
+        rule_id: CmsId,
+    ) -> CmsResult<CommandResult>;
     async fn list_feed_items(
         &self,
         ctx: &CmsRequestContext,
@@ -269,8 +320,11 @@ pub trait CmsRepository: Send + Sync {
         ctx: &CmsRequestContext,
         command: FeedItemsCommand,
     ) -> CmsResult<CmsFeedItemPage>;
-    async fn delete_feed_item(&self, ctx: &CmsRequestContext, item_id: CmsId)
-        -> CmsResult<CommandResult>;
+    async fn delete_feed_item(
+        &self,
+        ctx: &CmsRequestContext,
+        item_id: CmsId,
+    ) -> CmsResult<CommandResult>;
     async fn retrieve_feed_snapshot(
         &self,
         ctx: &CmsRequestContext,

@@ -29,7 +29,9 @@ impl CmsService {
         command: TaxonomyCommand,
     ) -> CmsResult<CmsTaxonomy> {
         ctx.require_permission("cms.taxonomy.manage")?;
-        self.repository().update_taxonomy(ctx, taxonomy_id, command).await
+        self.repository()
+            .update_taxonomy(ctx, taxonomy_id, command)
+            .await
     }
 
     pub async fn delete_taxonomy(
@@ -66,7 +68,9 @@ impl CmsService {
         command: TaxonomyTermCommand,
     ) -> CmsResult<CmsTaxonomyTerm> {
         ctx.require_permission("cms.taxonomy.manage")?;
-        self.repository().update_taxonomy_term(ctx, term_id, command).await
+        self.repository()
+            .update_taxonomy_term(ctx, term_id, command)
+            .await
     }
 
     pub async fn delete_taxonomy_term(

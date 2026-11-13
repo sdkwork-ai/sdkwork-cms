@@ -29,7 +29,12 @@ impl CmsService {
             ));
         }
         if command.target_type == "external_url"
-            && command.target_url.as_deref().unwrap_or("").trim().is_empty()
+            && command
+                .target_url
+                .as_deref()
+                .unwrap_or("")
+                .trim()
+                .is_empty()
         {
             return Err(CmsError::validation(
                 "target_url is required for external_url targets",

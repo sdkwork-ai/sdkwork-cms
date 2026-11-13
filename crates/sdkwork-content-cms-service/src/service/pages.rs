@@ -66,21 +66,26 @@ impl CmsService {
     ) -> CmsResult<CmsPublishSnapshot> {
         ctx.require_permission("cms.page.publish")?;
         let snapshot = self.repository().publish_page(ctx, command.clone()).await?;
-        let _ = self.event_publisher().enqueue(
-            ctx,
-            CmsOutboxEventDraft {
-                aggregate_type: "page".to_string(),
-                aggregate_id: command.owner_id,
-                event_type: CmsEventType::PagePublished,
-                payload_json: serde_json::to_string(&serde_json::json!({
-                    "page_id": command.owner_id,
-                    "snapshot_id": snapshot.id,
-                }))
-                .unwrap_or_default(),
-            },
-        ).await;
+        let _ = self
+            .event_publisher()
+            .enqueue(
+                ctx,
+                CmsOutboxEventDraft {
+                    aggregate_type: "page".to_string(),
+                    aggregate_id: command.owner_id,
+                    event_type: CmsEventType::PagePublished,
+                    payload_json: serde_json::to_string(&serde_json::json!({
+                        "page_id": command.owner_id,
+                        "snapshot_id": snapshot.id,
+                    }))
+                    .unwrap_or_default(),
+                },
+            )
+            .await;
         if let Some(port) = self.cache_invalidation_port() {
-            let _ = port.request_cache_invalidation(ctx, &format!("page:{}", command.owner_id)).await;
+            let _ = port
+                .request_cache_invalidation(ctx, &format!("page:{}", command.owner_id))
+                .await;
         }
         if let Some(port) = self.sitemap_projection_port() {
             let _ = port.request_sitemap_projection(ctx, 0).await;

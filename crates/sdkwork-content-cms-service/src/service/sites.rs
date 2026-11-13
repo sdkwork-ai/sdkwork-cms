@@ -20,23 +20,30 @@ impl CmsService {
     ) -> CmsResult<CmsSite> {
         ctx.require_permission("cms.site.manage")?;
         let site = self.repository().create_site(ctx, command).await?;
-        let _ = self.event_publisher().enqueue(
-            ctx,
-            CmsOutboxEventDraft {
-                aggregate_type: "site".to_string(),
-                aggregate_id: site.id,
-                event_type: CmsEventType::SiteCreated,
-                payload_json: serde_json::to_string(&serde_json::json!({
-                    "site_id": site.id,
-                    "code": site.code,
-                }))
-                .unwrap_or_default(),
-            },
-        ).await;
+        let _ = self
+            .event_publisher()
+            .enqueue(
+                ctx,
+                CmsOutboxEventDraft {
+                    aggregate_type: "site".to_string(),
+                    aggregate_id: site.id,
+                    event_type: CmsEventType::SiteCreated,
+                    payload_json: serde_json::to_string(&serde_json::json!({
+                        "site_id": site.id,
+                        "code": site.code,
+                    }))
+                    .unwrap_or_default(),
+                },
+            )
+            .await;
         Ok(site)
     }
 
-    pub async fn retrieve_site(&self, ctx: &CmsRequestContext, site_id: CmsId) -> CmsResult<CmsSite> {
+    pub async fn retrieve_site(
+        &self,
+        ctx: &CmsRequestContext,
+        site_id: CmsId,
+    ) -> CmsResult<CmsSite> {
         ctx.require_permission("cms.site.read")?;
         self.repository().retrieve_site(ctx, site_id).await
     }
@@ -85,7 +92,9 @@ impl CmsService {
         command: ChannelCommand,
     ) -> CmsResult<CmsChannel> {
         ctx.require_permission("cms.channel.manage")?;
-        self.repository().update_channel(ctx, channel_id, command).await
+        self.repository()
+            .update_channel(ctx, channel_id, command)
+            .await
     }
 
     pub async fn delete_channel(
