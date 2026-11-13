@@ -19,10 +19,18 @@ pub enum CmsLoginScope {
 
 impl CmsRequestContext {
     pub fn has_permission(&self, permission: &str) -> bool {
-        self.permissions.iter().any(|value| value == permission)
+        // Wildcard-aware (AUTHORIZATION_STATE_SPEC 3.5): `*`, `{domain}.*`, and
+        // `*.{action}` grants must authorize without re-login or re-expansion.
+        sdkwork_web_core::request_context::permission_scope_matches_any(
+            &self.permissions,
+            permission,
+        )
     }
 
-    pub fn require_permission(&self, permission: &'static str) -> Result<(), crate::error::CmsError> {
+    pub fn require_permission(
+        &self,
+        permission: &'static str,
+    ) -> Result<(), crate::error::CmsError> {
         if self.has_permission(permission) {
             Ok(())
         } else {
